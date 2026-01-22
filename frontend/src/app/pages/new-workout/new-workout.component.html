@@ -1,0 +1,97 @@
+<div class="mb-5 pb-5 fade-in">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-2">
+      <a routerLink="/workouts" class="text-secondary">
+        <i class="bi bi-arrow-left fs-4"></i>
+      </a>
+      <h2 class="fw-bold m-0">Novo Treino</h2>
+    </div>
+    
+    <button (click)="onSubmit()" 
+            [disabled]="workoutForm.invalid || isSaving"
+            class="btn btn-success fw-bold px-4">
+      <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+      Salvar
+    </button>
+  </div>
+
+  <form [formGroup]="workoutForm">
+    
+    <div class="card-dark p-3 mb-4">
+      <div class="mb-3">
+        <label class="text-secondary small fw-bold mb-1">Nome do Treino</label>
+        <input type="text" formControlName="name" 
+               class="form-control form-control-dark" 
+               placeholder="Ex: Treino A - Peito e Tríceps">
+      </div>
+      
+      <div>
+        <label class="text-secondary small fw-bold mb-1">Dia da Semana</label>
+        <select formControlName="dayOfWeek" class="form-select form-select-dark">
+          <option *ngFor="let day of daysOfWeek" [value]="day">{{ day }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold m-0">Exercícios</h5>
+      <button type="button" (click)="addExercise()" class="btn btn-sm btn-outline-secondary rounded-pill">
+        <i class="bi bi-plus-lg me-1"></i> Adicionar
+      </button>
+    </div>
+
+    <div formArrayName="exercises">
+      <div *ngFor="let exercise of exercises.controls; let i = index" [formGroupName]="i" class="card-dark p-3 mb-3">
+        
+        <div class="d-flex justify-content-between mb-3">
+          <div class="grow me-3">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <i class="bi bi-grid-3x2-gap-fill text-secondary"></i> <input type="text" formControlName="name" 
+                     class="form-control form-control-dark form-control-sm fw-bold" 
+                     placeholder="Nome do exercício">
+            </div>
+          </div>
+          <button type="button" (click)="removeExercise(i)" class="btn btn-link text-danger p-0">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+
+        <div class="row px-2 mb-2">
+          <div class="col-2 text-secondary small">Série</div>
+          <div class="col-5 text-secondary small text-center">Reps</div>
+          <div class="col-5 text-secondary small text-center">Carga (kg)</div>
+        </div>
+
+        <div formArrayName="sets">
+          <div *ngFor="let set of getSets(i).controls; let j = index" [formGroupName]="j" class="row g-2 align-items-center mb-2">
+            
+            <div class="col-2 d-flex justify-content-center">
+              <span class="badge bg-secondary rounded-circle d-flex align-items-center justify-content-center" 
+                    style="width: 24px; height: 24px;">{{ j + 1 }}</span>
+            </div>
+
+            <div class="col-5">
+              <input type="number" formControlName="reps" class="form-control form-control-dark text-center">
+            </div>
+
+            <div class="col-5 position-relative">
+              <input type="number" formControlName="weight" class="form-control form-control-dark text-center">
+              <i *ngIf="getSets(i).length > 1" 
+                 (click)="removeSet(i, j)"
+                 class="bi bi-x text-danger position-absolute top-50 end-0 translate-middle-y me-1" 
+                 style="cursor: pointer; right: -15px !important;"></i>
+            </div>
+
+          </div>
+        </div>
+
+        <button type="button" (click)="addSet(i)" class="btn btn-dark w-100 mt-2 py-2 text-secondary small border-dashed">
+          + Adicionar Série
+        </button>
+
+      </div>
+    </div>
+
+  </form>
+</div>

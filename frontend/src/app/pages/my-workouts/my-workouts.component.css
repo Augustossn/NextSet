@@ -1,0 +1,71 @@
+/* Botão Adicionar (+) no topo direito */
+.btn-add {
+    width: 45px;
+    height: 45px;
+    background-color: var(--primary-green);
+    color: #000;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    text-decoration: none;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 230, 64, 0.3);
+}
+
+.btn-add:active {
+    transform: scale(0.95);
+}
+
+/* Container dos Filtros (Fundo cinza escuro pílula) */
+.filter-container {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 4px;
+    display: flex;
+    border: 1px solid #27272a;
+}
+
+/* Botões do Filtro */
+.filter-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-gray);
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Estado Ativo do Filtro */
+.filter-btn.active {
+    background-color: #27272a; /* Ou preto se preferir */
+    color: var(--text-white);
+    font-weight: 600;
+}
+
+/* Ícone do Treino (Quadrado Verde Escuro) */
+.workout-icon {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(0, 230, 64, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-green);
+    font-size: 1.5rem;
+}
+
+/* Animação */
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

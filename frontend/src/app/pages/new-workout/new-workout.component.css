@@ -1,0 +1,48 @@
+/* Inputs Escuros Customizados */
+.form-control-dark, .form-select-dark {
+    background-color: var(--input-bg) !important;
+    border: 1px solid #3f3f46;
+    color: var(--text-white);
+    border-radius: 8px;
+}
+
+.form-control-dark:focus, .form-select-dark:focus {
+    background-color: var(--input-bg);
+    border-color: var(--primary-green);
+    color: var(--text-white);
+    box-shadow: 0 0 0 2px rgba(0, 230, 64, 0.2); /* Glow verde */
+}
+
+/* Remover setas do input number */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* Placeholder cinza */
+::placeholder {
+    color: #52525b !important;
+    opacity: 1;
+}
+
+/* Botão adicionar série (tracejado) */
+.border-dashed {
+    border: 1px dashed #3f3f46;
+    background-color: transparent;
+}
+.border-dashed:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-gray);
+    color: var(--text-white) !important;
+}
+
+/* Animação suave */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

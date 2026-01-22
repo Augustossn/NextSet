@@ -1,0 +1,72 @@
+/* Importando Bootstrap e Ícones */
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+:root {
+  /* Paleta de Cores baseada nas imagens */
+  --bg-color: #050505;       /* Fundo quase preto */
+  --card-bg: #121212;        /* Fundo dos cards */
+  --primary-green: #00e640;  /* Aquele verde neon vibrante */
+  --text-white: #ffffff;
+  --text-gray: #a1a1aa;
+  --danger-red: #ef4444;
+  --input-bg: #1f1f1f;
+  
+  --border-radius: 12px;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-white);
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin-bottom: 80px; /* Espaço para a barra de navegação inferior */
+}
+
+/* Estilização Padrão dos Cards */
+.card-dark {
+  background-color: var(--card-bg);
+  border: 1px solid #27272a;
+  border-radius: var(--border-radius);
+  color: var(--text-white);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+/* Títulos */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Botão Verde Principal */
+.btn-primary-custom {
+  background-color: var(--primary-green);
+  color: #000; /* Texto preto no fundo verde dá contraste alto igual na imagem */
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.btn-primary-custom:hover {
+  background-color: #00c035;
+  color: #000;
+}
+
+/* Ícones redondos (como o haltere verde na dashboard) */
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 230, 64, 0.1); /* Verde transparente */
+  color: var(--primary-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.nav-link { color: var(--text-gray); }
+.active-link { color: var(--primary-green) !important; }

@@ -1,0 +1,14 @@
+/* Cor padrão dos ícones (Cinza) */
+.nav-link {
+    color: var(--text-gray);
+    transition: color 0.3s;
+}
+
+/* Cor quando o link está ativo (Verde Neon) */
+.active-link {
+    color: var(--primary-green) !important;
+}
+
+.nav-link:hover {
+    color: #fff;
+}

@@ -1,1 +1,75 @@
-.vscode
+# ==========================================
+# 1. GERAIS / SISTEMA OPERACIONAL
+# ==========================================
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+temp/
+
+# ==========================================
+# 2. IDEs (VS Code, IntelliJ, Eclipse)
+# ==========================================
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse
+.settings/
+.classpath
+.project
+.factorypath
+bin/
+
+# ==========================================
+# 3. BACKEND (Java / Spring Boot / Maven)
+# ==========================================
+target/
+*.jar
+*.war
+*.ear
+*.class
+
+# Maven Wrapper (Opcional: muitos preferem comitar, mas se quiser ignorar:)
+#.mvn/wrapper/maven-wrapper.jar
+
+# Logs de erro da JVM
+hs_err_pid*
+
+# Arquivos de ambiente local (Segurança)
+application-local.properties
+application-secret.properties
+.env
+
+# ==========================================
+# 4. FRONTEND (Angular / Node.js)
+# ==========================================
+# Dependências do Node (GIGANTE - Nunca comite isso)
+node_modules/
+
+# Build de produção (Angular gera aqui)
+dist/
+/dist
+out-tsc/
+
+# Configurações locais e cache do Angular
+.angular/
+.sass-cache/
+connect.lock
+coverage/
+libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+typings/
+
+# Ambientes locais (Segurança)
+src/environments/environment.local.ts
+.env.local
