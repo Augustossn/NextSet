@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../services/api.service'; // Ajuste o caminho se necessário
-import { DashboardStats } from '../../models/models';    // Ajuste o caminho se necessário
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ApiService } from '../../services/api.service';
+import { DashboardStatsDTO } from '../../models/models';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,14 +12,17 @@ export class DashboardComponent implements OnInit {
 
   currentDate: Date = new Date();
   
-  // Objeto inicial zerado para evitar erros no HTML antes da API responder
-  stats: DashboardStats = {
+  stats: DashboardStatsDTO = {
     totalWorkouts: 0,
     totalExercises: 0,
-    totalPRs: 0
+    totalPRs: 0,
+    todayWorkout: undefined
   };
 
-  constructor(private api: ApiService) { }
+  constructor(
+    private api: ApiService,
+    private cd: ChangeDetectorRef // Ferramenta para atualizar a tela à força
+  ) { }
 
   ngOnInit(): void {
     this.loadStats();
@@ -28,10 +31,14 @@ export class DashboardComponent implements OnInit {
   loadStats() {
     this.api.getDashboardStats().subscribe({
       next: (data) => {
-        this.stats = data;
+        // Truque para o Angular perceber que o objeto mudou
+        this.stats = { ...data };
+        
+        // Força a atualização do HTML agora
+        this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Erro ao conectar com o backend:', err);
+        console.error('Erro no dashboard', err);
       }
     });
   }

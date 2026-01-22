@@ -2,13 +2,17 @@ package com.nextset.service;
 
 import com.nextset.dto.DashboardStatsDTO;
 import com.nextset.dto.PersonalRecordDTO;
-import com.nextset.model.PersonalRecord;
+import com.nextset.dto.WorkoutDTO;
+import com.nextset.model.Workout;
 import com.nextset.repository.PersonalRecordRepository;
 import com.nextset.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,16 +26,36 @@ public class StatsService {
 
     public DashboardStatsDTO getStats() {
         DashboardStatsDTO stats = new DashboardStatsDTO();
-        stats.setTotalWorkouts(workoutRepository.count());
         
-        // Lógica simplificada: contar total de exercícios somando o tamanho das listas
-        // (Em um cenário real, um count query customizado seria mais performático)
+        // 1. Contadores
+        stats.setTotalWorkouts(workoutRepository.count());
+        stats.setTotalPRs(prRepository.count());
+        
         long totalExercises = workoutRepository.findAll().stream()
                 .mapToLong(w -> w.getExercises().size())
                 .sum();
-                
         stats.setTotalExercises(totalExercises);
-        stats.setTotalPRs(prRepository.count());
+
+        // 2. Lógica do Treino de Hoje (BLINDADA)
+        String diaHoje = getDiaEmPortugues();
+        
+        // Busca TODOS e filtra na memória para ignorar erros de digitação (espaços/maiúsculas)
+        Optional<Workout> treinoHoje = workoutRepository.findAll().stream()
+            .filter(w -> w.getDayOfWeek().trim().equalsIgnoreCase(diaHoje))
+            .findFirst();
+
+        if (treinoHoje.isPresent()) {
+            Workout treino = treinoHoje.get();
+            WorkoutDTO treinoDto = new WorkoutDTO();
+            treinoDto.setId(treino.getId());
+            treinoDto.setName(treino.getName());
+            treinoDto.setDayOfWeek(treino.getDayOfWeek());
+            
+            stats.setTodayWorkout(treinoDto);
+            System.out.println("Treino encontrado para hoje: " + treino.getName()); // Log para debug
+        } else {
+            System.out.println("Nenhum treino encontrado para: " + diaHoje); // Log para debug
+        }
         
         return stats;
     }
@@ -45,5 +69,20 @@ public class StatsService {
             dto.setDateAchieved(pr.getDateAchieved());
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    // Tradutor de Dias
+    private String getDiaEmPortugues() {
+        DayOfWeek dow = LocalDate.now().getDayOfWeek();
+        switch (dow) {
+            case MONDAY: return "Segunda";
+            case TUESDAY: return "Terça";
+            case WEDNESDAY: return "Quarta";
+            case THURSDAY: return "Quinta";
+            case FRIDAY: return "Sexta";
+            case SATURDAY: return "Sábado";
+            case SUNDAY: return "Domingo";
+            default: return "";
+        }
     }
 }

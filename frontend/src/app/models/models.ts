@@ -18,11 +18,18 @@ export interface Workout {
   exercises: Exercise[];
 }
 
+// Alias para o TypeScript aceitar "WorkoutDTO" como se fosse "Workout"
+export interface WorkoutDTO extends Workout {}
+
 export interface DashboardStats {
   totalWorkouts: number;
   totalExercises: number;
   totalPRs: number;
+  todayWorkout?: Workout; // <--- ADICIONADO: O Backend agora manda isso!
 }
+
+// Alias para o TypeScript aceitar "DashboardStatsDTO"
+export interface DashboardStatsDTO extends DashboardStats {}
 
 export interface PersonalRecord {
   exerciseName: string;
@@ -30,3 +37,6 @@ export interface PersonalRecord {
   maxReps: number;
   dateAchieved: string;
 }
+
+// Alias para o TypeScript aceitar "PersonalRecordDTO"
+export interface PersonalRecordDTO extends PersonalRecord {}

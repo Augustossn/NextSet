@@ -1,35 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { PersonalRecord } from '../../models/models';
+import { PersonalRecordDTO } from '../../models/models';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-prs',
-  standalone: false, // Obrigatório
+  standalone: false,
   templateUrl: './prs.component.html',
   styleUrls: ['./prs.component.css']
 })
 export class PrsComponent implements OnInit {
 
-  prs: PersonalRecord[] = [];
-  loading = true;
+  prs: PersonalRecordDTO[] = [];
+  isLoading = true;
 
-  constructor(private api: ApiService) { }
+  constructor(
+    private api: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadPRs();
   }
 
-  loadPRs() {
-    this.loading = true;
-    this.api.getPRs().subscribe({
-      next: (data) => {
-        this.prs = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar PRs', err);
-        this.loading = false;
-      }
-    });
+  loadPRs(): void {
+    this.isLoading = true;
+
+    this.api.getPRs()
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          // 🔥 força o Angular a atualizar a tela
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.prs = data;
+        },
+        error: (err) => {
+          console.error('Erro ao carregar PRs', err);
+        }
+      });
   }
 }

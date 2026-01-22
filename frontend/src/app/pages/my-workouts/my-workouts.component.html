@@ -1,67 +1,60 @@
 <div class="mb-5 pb-5 fade-in">
-  
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="fw-bold m-0">Meus Treinos</h2>
-      <small class="text-secondary" *ngIf="!loading">
-        {{ workouts.length }} treino{{ workouts.length !== 1 ? 's' : '' }} cadastrado{{ workouts.length !== 1 ? 's' : '' }}
-      </small>
-    </div>
-    
-    <a routerLink="/new-workout" class="btn-add">
+    <h2 class="fw-bold m-0 text-white">Meus Treinos</h2>
+    <button routerLink="/new-workout" class="btn btn-success rounded-circle shadow-success btn-floating">
       <i class="bi bi-plus-lg"></i>
-    </a>
+    </button>
   </div>
 
-  <div class="filter-container mb-4">
-    <button class="filter-btn" 
-            [class.active]="filter === 'all'" 
-            (click)="setFilter('all')">
+  <div class="bg-dark-light p-1 rounded-pill d-flex mb-4 border border-secondary">
+    <button class="btn btn-sm flex-fill rounded-pill transition-all"
+      [class.btn-dark-active]="filterType === 'ALL'" 
+      [class.text-secondary]="filterType !== 'ALL'"
+      (click)="setFilter('ALL')">
       Todos
     </button>
-    <button class="filter-btn" 
-            [class.active]="filter === 'day'" 
-            (click)="setFilter('day')">
+    <button class="btn btn-sm flex-fill rounded-pill transition-all"
+      [class.btn-dark-active]="filterType === 'DAY'" 
+      [class.text-secondary]="filterType !== 'DAY'"
+      (click)="setFilter('DAY')">
       Por Dia
     </button>
   </div>
 
-  <div *ngIf="loading" class="text-center py-5">
-    <div class="spinner-border text-success" role="status"></div>
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
   </div>
 
-  <div *ngIf="!loading && workouts.length === 0" class="text-center py-5 text-secondary">
-    <i class="bi bi-person-x fs-1 d-block mb-3"></i>
-    <p>Nenhum treino encontrado.</p>
-    <a routerLink="/new-workout" class="text-success text-decoration-none">Cadastrar agora</a>
-  </div>
-
-  <div *ngIf="!loading && workouts.length > 0" class="d-flex flex-column gap-3">
+  <div *ngIf="!isLoading" class="d-flex flex-column gap-3">
     
-    <div *ngFor="let workout of workouts" class="card-dark p-3">
-      
-      <div class="d-flex justify-content-between align-items-start mb-3">
-        <div class="d-flex align-items-center gap-3">
-          <div class="workout-icon">
-            <i class="bi bi-person-arms"></i>
-          </div>
-          <div>
-            <h5 class="fw-bold m-0 text-white">{{ workout.name }}</h5>
-            <span class="badge bg-dark-subtle text-secondary border border-secondary mt-1">
-              {{ workout.dayOfWeek }}
-            </span>
-          </div>
+    <div *ngFor="let workout of filteredWorkouts" class="card-dark border-start border-4 border-success p-3">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div>
+          <h5 class="fw-bold m-0 text-white">{{ workout.name }}</h5>
+          <span class="badge bg-light text-dark mt-1">{{ workout.dayOfWeek }}</span>
+        </div>
+        
+        <div class="dropdown">
+          <button class="btn btn-link text-secondary p-0" type="button">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
         </div>
       </div>
-
+      
       <p class="text-secondary small mb-3">
         {{ workout.exercises?.length || 0 }} exercícios
       </p>
 
-      <button class="btn btn-primary-custom w-100">
+      <button class="btn btn-success w-100 fw-bold py-2 rounded-3 shadow-sm">
         <i class="bi bi-play-fill me-1"></i> Iniciar Treino
       </button>
+    </div>
 
+    <div *ngIf="filteredWorkouts.length === 0" class="text-center py-5 opacity-50">
+      <i class="bi bi-clipboard-x fs-1 mb-2 d-block"></i>
+      <p>Nenhum treino encontrado para este filtro.</p>
     </div>
 
   </div>

@@ -16,11 +16,13 @@ public class StatsController {
     @Autowired
     private StatsService statsService;
 
+    // Rota explícita: /api/stats/dashboard
     @GetMapping("/dashboard")
     public ResponseEntity<DashboardStatsDTO> getDashboardStats() {
         return ResponseEntity.ok(statsService.getStats());
     }
 
+    // Rota explícita: /api/stats/prs
     @GetMapping("/prs")
     public ResponseEntity<List<PersonalRecordDTO>> getPRs() {
         return ResponseEntity.ok(statsService.getAllPRs());

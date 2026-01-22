@@ -17,14 +17,13 @@ public class WorkoutService {
     @Autowired
     private WorkoutRepository workoutRepository;
 
-    @Transactional // Garante que tudo salva ou nada salva (rollback em caso de erro)
+    @Transactional
     public WorkoutDTO createWorkout(WorkoutDTO dto) {
         Workout workout = new Workout();
         workout.setName(dto.getName());
         workout.setDayOfWeek(dto.getDayOfWeek());
         workout.setCreatedAt(LocalDateTime.now());
 
-        // Convertendo DTOs para Entidades e configurando relacionamentos
         if (dto.getExercises() != null) {
             List<Exercise> exercises = dto.getExercises().stream().map(exDto -> {
                 Exercise exercise = new Exercise();
@@ -49,21 +48,46 @@ public class WorkoutService {
         }
 
         Workout savedWorkout = workoutRepository.save(workout);
-        dto.setId(savedWorkout.getId()); // Retorna o ID gerado
+        dto.setId(savedWorkout.getId());
         return dto;
     }
 
     public List<WorkoutDTO> getAllWorkouts() {
-        return workoutRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
+        return workoutRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
-    // Helper simples para conversão (poderia usar ModelMapper/MapStruct)
+    // --- AQUI ESTAVA FALTANDO O MAPEAMENTO DE VOLTA ---
     private WorkoutDTO convertToDto(Workout workout) {
         WorkoutDTO dto = new WorkoutDTO();
         dto.setId(workout.getId());
         dto.setName(workout.getName());
         dto.setDayOfWeek(workout.getDayOfWeek());
-        // Mapear exercícios e sets aqui se necessário para a listagem
+
+        // Converte a lista de Entidades (Exercise) para lista de DTOs (ExerciseDTO)
+        if (workout.getExercises() != null) {
+            List<ExerciseDTO> exerciseDTOs = workout.getExercises().stream().map(exercise -> {
+                ExerciseDTO exDto = new ExerciseDTO();
+                exDto.setName(exercise.getName());
+
+                // Converte as séries (Sets)
+                if (exercise.getSets() != null) {
+                    List<ExerciseSetDTO> setDTOs = exercise.getSets().stream().map(set -> {
+                        ExerciseSetDTO setDto = new ExerciseSetDTO();
+                        setDto.setSetNumber(set.getSetNumber());
+                        setDto.setReps(set.getReps());
+                        setDto.setWeight(set.getWeight());
+                        return setDto;
+                    }).collect(Collectors.toList());
+                    exDto.setSets(setDTOs);
+                }
+                return exDto;
+            }).collect(Collectors.toList());
+
+            dto.setExercises(exerciseDTOs);
+        }
+
         return dto;
     }
 }
