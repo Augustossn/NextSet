@@ -4,6 +4,7 @@ import com.nextset.dto.*;
 import com.nextset.model.*;
 import com.nextset.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull; 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ public class WorkoutService {
             List<Exercise> exercises = dto.getExercises().stream().map(exDto -> {
                 Exercise exercise = new Exercise();
                 exercise.setName(exDto.getName());
-                exercise.setWorkout(workout); // Vínculo Pai -> Filho
+                exercise.setWorkout(workout); 
 
                 if (exDto.getSets() != null) {
                     List<ExerciseSet> sets = exDto.getSets().stream().map(setDto -> {
@@ -36,7 +37,7 @@ public class WorkoutService {
                         set.setSetNumber(setDto.getSetNumber());
                         set.setReps(setDto.getReps());
                         set.setWeight(setDto.getWeight());
-                        set.setExercise(exercise); // Vínculo Filho -> Neto
+                        set.setExercise(exercise); 
                         return set;
                     }).collect(Collectors.toList());
                     exercise.setSets(sets);
@@ -58,20 +59,17 @@ public class WorkoutService {
                 .collect(Collectors.toList());
     }
 
-    // --- AQUI ESTAVA FALTANDO O MAPEAMENTO DE VOLTA ---
     private WorkoutDTO convertToDto(Workout workout) {
         WorkoutDTO dto = new WorkoutDTO();
         dto.setId(workout.getId());
         dto.setName(workout.getName());
         dto.setDayOfWeek(workout.getDayOfWeek());
 
-        // Converte a lista de Entidades (Exercise) para lista de DTOs (ExerciseDTO)
         if (workout.getExercises() != null) {
             List<ExerciseDTO> exerciseDTOs = workout.getExercises().stream().map(exercise -> {
                 ExerciseDTO exDto = new ExerciseDTO();
                 exDto.setName(exercise.getName());
 
-                // Converte as séries (Sets)
                 if (exercise.getSets() != null) {
                     List<ExerciseSetDTO> setDTOs = exercise.getSets().stream().map(set -> {
                         ExerciseSetDTO setDto = new ExerciseSetDTO();
@@ -91,37 +89,31 @@ public class WorkoutService {
         return dto;
     }
 
-    public WorkoutDTO getWorkoutById(Long id) {
+    public WorkoutDTO getWorkoutById(@NonNull Long id) {
         Workout workout = workoutRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
-        return convertToDto(workout); // Reaproveita seu método convertToDto existente
+        return convertToDto(workout); 
     }
 
-    // Deletar Treino
-    public void deleteWorkout(Long id) {
+    public void deleteWorkout(@NonNull Long id) {
         workoutRepository.deleteById(id);
     }
 
-    // Atualizar Treino
     @Transactional
-    public WorkoutDTO updateWorkout(Long id, WorkoutDTO dto) {
+    public WorkoutDTO updateWorkout(@NonNull Long id, WorkoutDTO dto) {
         Workout workout = workoutRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
 
         workout.setName(dto.getName());
         workout.setDayOfWeek(dto.getDayOfWeek());
-
-        // Atualizar a lista de exercícios é complexo. 
-        // A estratégia mais simples e segura: limpar a lista atual e adicionar a nova.
-        // O orphanRemoval=true na Entidade cuidará de apagar os antigos do banco.
         
-        workout.getExercises().clear(); // Limpa os antigos
+        workout.getExercises().clear(); 
 
         if (dto.getExercises() != null) {
             List<Exercise> newExercises = dto.getExercises().stream().map(exDto -> {
                 Exercise exercise = new Exercise();
                 exercise.setName(exDto.getName());
-                exercise.setWorkout(workout); // Vínculo Pai
+                exercise.setWorkout(workout); 
 
                 if (exDto.getSets() != null) {
                     List<ExerciseSet> sets = exDto.getSets().stream().map(setDto -> {
@@ -129,7 +121,7 @@ public class WorkoutService {
                         set.setSetNumber(setDto.getSetNumber());
                         set.setReps(setDto.getReps());
                         set.setWeight(setDto.getWeight());
-                        set.setExercise(exercise); // Vínculo Filho
+                        set.setExercise(exercise); 
                         return set;
                     }).collect(Collectors.toList());
                     exercise.setSets(sets);
@@ -137,7 +129,7 @@ public class WorkoutService {
                 return exercise;
             }).collect(Collectors.toList());
             
-            workout.getExercises().addAll(newExercises); // Adiciona os novos
+            workout.getExercises().addAll(newExercises); 
         }
 
         Workout saved = workoutRepository.save(workout);

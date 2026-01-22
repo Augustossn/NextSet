@@ -4,6 +4,7 @@ import com.nextset.dto.WorkoutDTO;
 import com.nextset.service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull; // <--- A CORREÇÃO ESTÁ AQUI (Import do Spring)
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,17 +27,17 @@ public class WorkoutController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<WorkoutDTO> getWorkout(@PathVariable Long id) {
+    public ResponseEntity<WorkoutDTO> getWorkout(@PathVariable @NonNull Long id) {
         return ResponseEntity.ok(workoutService.getWorkoutById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WorkoutDTO> updateWorkout(@PathVariable Long id, @RequestBody WorkoutDTO dto) {
+    public ResponseEntity<WorkoutDTO> updateWorkout(@PathVariable @NonNull Long id, @RequestBody WorkoutDTO dto) {
         return ResponseEntity.ok(workoutService.updateWorkout(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWorkout(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteWorkout(@PathVariable @NonNull Long id) {
         workoutService.deleteWorkout(id);
         return ResponseEntity.noContent().build();
     }
