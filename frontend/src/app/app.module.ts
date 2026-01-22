@@ -1,20 +1,22 @@
-import { NgModule, LOCALE_ID } from '@angular/core'; // <--- Importe LOCALE_ID
+import { NgModule, LOCALE_ID } from '@angular/core'; // Adicione LOCALE_ID
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-
 import { AppComponent } from './app.component';
+
+// --- Imports de Locale (Datas em Português) ---
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt); // Registra o português
+// ---------------------------------------------
+
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MyWorkoutsComponent } from './pages/my-workouts/my-workouts.component';
 import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 import { PrsComponent } from './pages/prs/prs.component';
-
-// --- CONFIGURAÇÃO DO PORTUGUÊS ---
-import { registerLocaleData } from '@angular/common';
-import ptBr from '@angular/common/locales/pt';
-registerLocaleData(ptBr);
-// ---------------------------------
+import { WorkoutSessionComponent } from './pages/workout-session/workout-session.component';
 
 @NgModule({
   declarations: [
@@ -22,17 +24,19 @@ registerLocaleData(ptBr);
     DashboardComponent,
     MyWorkoutsComponent,
     NewWorkoutComponent,
-    PrsComponent
+    PrsComponent,
+    WorkoutSessionComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: 'pt-BR' } // <--- Adicione isso
+    // Diz para o Angular usar PT-BR como padrão em tudo
+    { provide: LOCALE_ID, useValue: 'pt-BR' } 
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,26 @@
+/* Fonte monoespaçada para o cronômetro não ficar "pulando" */
+.fw-mono {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
+
+.bg-black {
+  background-color: #000 !important;
+}
+
+/* Fundo degradê para o botão flutuante não cortar seco */
+.bg-gradient-black {
+  background: linear-gradient(to top, #000000 80%, transparent 100%);
+}
+
+.bg-success-subtle {
+  background-color: rgba(25, 135, 84, 0.15) !important; /* Verde bem fraquinho */
+}
+
+/* Ajuste nos inputs para ficarem bonitos no dark mode */
+input.form-control:focus {
+  background-color: #222 !important;
+  color: white !important;
+  border-color: #198754 !important;
+  box-shadow: none;
+}

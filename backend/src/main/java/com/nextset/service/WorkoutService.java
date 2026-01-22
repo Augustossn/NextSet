@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,25 +27,26 @@ public class WorkoutService {
         workout.setCreatedAt(LocalDateTime.now());
 
         if (dto.getExercises() != null) {
-            List<Exercise> exercises = dto.getExercises().stream().map(exDto -> {
+            List<Exercise> exercises = new ArrayList<>();
+            for (ExerciseDTO exDto : dto.getExercises()) {
                 Exercise exercise = new Exercise();
                 exercise.setName(exDto.getName());
-                exercise.setWorkout(workout); 
+                exercise.setWorkout(workout);
 
+                List<ExerciseSet> sets = new ArrayList<>();
                 if (exDto.getSets() != null) {
-                    List<ExerciseSet> sets = exDto.getSets().stream().map(setDto -> {
+                    for (ExerciseSetDTO setDto : exDto.getSets()) {
                         ExerciseSet set = new ExerciseSet();
                         set.setSetNumber(setDto.getSetNumber());
                         set.setReps(setDto.getReps());
                         set.setWeight(setDto.getWeight());
-                        set.setExercise(exercise); 
-                        return set;
-                    }).collect(Collectors.toList());
-                    exercise.setSets(sets);
+                        set.setExercise(exercise);
+                        sets.add(set);
+                    }
                 }
-                return exercise;
-            }).collect(Collectors.toList());
-            
+                exercise.setSets(sets);
+                exercises.add(exercise);
+            }
             workout.setExercises(exercises);
         }
 
@@ -53,46 +55,51 @@ public class WorkoutService {
         return dto;
     }
 
+    @Transactional(readOnly = true) // <--- ESSENCIAL PARA LEITURA
     public List<WorkoutDTO> getAllWorkouts() {
         return workoutRepository.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true) // <--- ESSENCIAL PARA LEITURA
+    public WorkoutDTO getWorkoutById(@NonNull Long id) {
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
+        return convertToDto(workout); 
+    }
+
+    // Método Blindado de Conversão
     private WorkoutDTO convertToDto(Workout workout) {
         WorkoutDTO dto = new WorkoutDTO();
         dto.setId(workout.getId());
         dto.setName(workout.getName());
         dto.setDayOfWeek(workout.getDayOfWeek());
 
+        List<ExerciseDTO> exerciseDTOs = new ArrayList<>();
+        
         if (workout.getExercises() != null) {
-            List<ExerciseDTO> exerciseDTOs = workout.getExercises().stream().map(exercise -> {
+            for (Exercise exercise : workout.getExercises()) {
                 ExerciseDTO exDto = new ExerciseDTO();
                 exDto.setName(exercise.getName());
 
+                List<ExerciseSetDTO> setDTOs = new ArrayList<>();
                 if (exercise.getSets() != null) {
-                    List<ExerciseSetDTO> setDTOs = exercise.getSets().stream().map(set -> {
+                    for (ExerciseSet set : exercise.getSets()) {
                         ExerciseSetDTO setDto = new ExerciseSetDTO();
                         setDto.setSetNumber(set.getSetNumber());
                         setDto.setReps(set.getReps());
                         setDto.setWeight(set.getWeight());
-                        return setDto;
-                    }).collect(Collectors.toList());
-                    exDto.setSets(setDTOs);
+                        setDTOs.add(setDto);
+                    }
                 }
-                return exDto;
-            }).collect(Collectors.toList());
-
-            dto.setExercises(exerciseDTOs);
+                exDto.setSets(setDTOs);
+                exerciseDTOs.add(exDto);
+            }
         }
+        dto.setExercises(exerciseDTOs);
 
         return dto;
-    }
-
-    public WorkoutDTO getWorkoutById(@NonNull Long id) {
-        Workout workout = workoutRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
-        return convertToDto(workout); 
     }
 
     public void deleteWorkout(@NonNull Long id) {
@@ -107,29 +114,33 @@ public class WorkoutService {
         workout.setName(dto.getName());
         workout.setDayOfWeek(dto.getDayOfWeek());
         
-        workout.getExercises().clear(); 
+        // Limpa e recria (Estratégia segura)
+        if (workout.getExercises() != null) {
+            workout.getExercises().clear();
+        } else {
+            workout.setExercises(new ArrayList<>());
+        }
 
         if (dto.getExercises() != null) {
-            List<Exercise> newExercises = dto.getExercises().stream().map(exDto -> {
+            for (ExerciseDTO exDto : dto.getExercises()) {
                 Exercise exercise = new Exercise();
                 exercise.setName(exDto.getName());
-                exercise.setWorkout(workout); 
+                exercise.setWorkout(workout);
 
+                List<ExerciseSet> sets = new ArrayList<>();
                 if (exDto.getSets() != null) {
-                    List<ExerciseSet> sets = exDto.getSets().stream().map(setDto -> {
+                    for (ExerciseSetDTO setDto : exDto.getSets()) {
                         ExerciseSet set = new ExerciseSet();
                         set.setSetNumber(setDto.getSetNumber());
                         set.setReps(setDto.getReps());
                         set.setWeight(setDto.getWeight());
-                        set.setExercise(exercise); 
-                        return set;
-                    }).collect(Collectors.toList());
-                    exercise.setSets(sets);
+                        set.setExercise(exercise);
+                        sets.add(set);
+                    }
                 }
-                return exercise;
-            }).collect(Collectors.toList());
-            
-            workout.getExercises().addAll(newExercises); 
+                exercise.setSets(sets);
+                workout.getExercises().add(exercise);
+            }
         }
 
         Workout saved = workoutRepository.save(workout);

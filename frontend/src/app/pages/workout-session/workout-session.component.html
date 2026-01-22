@@ -1,0 +1,86 @@
+<div class="fade-in pb-5 mb-5">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4 sticky-top bg-black pt-3 pb-2 border-bottom border-secondary" style="z-index: 10;">
+    <div>
+      <small class="text-secondary d-block text-uppercase spacing-1">Treino Atual</small>
+      <h2 class="fw-bold text-white m-0">{{ workout?.name || '...' }}</h2>
+    </div>
+    <button routerLink="/workouts" class="btn btn-outline-secondary rounded-circle">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center mt-5">
+    <div class="spinner-border text-success" role="status"></div>
+    <p class="text-secondary mt-2">Buscando cargas...</p>
+  </div>
+
+  <div *ngIf="!isLoading && workout" class="d-flex flex-column gap-4">
+    
+    <div *ngFor="let exercise of workout.exercises; let i = index" class="card-dark p-3">
+      <h5 class="fw-bold text-success mb-3 border-bottom border-secondary pb-2">
+        {{ exercise.name }}
+      </h5>
+
+      <div *ngIf="exercise.sets && exercise.sets.length > 0; else noSets">
+        
+        <div class="row text-secondary small mb-2 text-center opacity-75 fw-bold">
+          <div class="col-2">SET</div>
+          <div class="col-3">KG (META)</div>
+          <div class="col-3">REPS</div>
+          <div class="col-4">FEITO</div>
+        </div>
+
+        <div *ngFor="let set of exercise.sets; let j = index" 
+             class="row align-items-center mb-2 text-center py-2 rounded transition-all border border-dark"
+             [class.bg-success-subtle]="isSetCompleted(i, j)"
+             [class.border-success]="isSetCompleted(i, j)">
+          
+          <div class="col-2 fw-bold text-white fs-5">{{ set.setNumber }}</div>
+          
+          <div class="col-3">
+            <input type="number" 
+                   [(ngModel)]="set.weight" 
+                   class="form-control bg-dark text-white border-secondary text-center fw-bold fs-5"
+                   placeholder="0">
+          </div>
+
+          <div class="col-3">
+            <input type="number" 
+                   [(ngModel)]="set.reps" 
+                   class="form-control bg-dark text-white border-secondary text-center"
+                   placeholder="0">
+          </div>
+
+          <div class="col-4">
+            <button class="btn btn-sm w-100 py-2 rounded-3" 
+                    [class.btn-success]="isSetCompleted(i, j)"
+                    [class.btn-dark]="!isSetCompleted(i, j)"
+                    style="border: 1px solid #444;"
+                    (click)="toggleSet(i, j)">
+              <i class="bi fs-5" [class.bi-check-lg]="isSetCompleted(i, j)" [class.bi-check2]="!isSetCompleted(i, j)"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <ng-template #noSets>
+        <div class="text-center py-3 text-secondary border border-dashed rounded opacity-75">
+          <i class="bi bi-exclamation-circle mb-2 d-block fs-4"></i>
+          <p class="m-0 small">Nenhuma série cadastrada.</p>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+
+  <div class="fixed-bottom p-3 bg-gradient-black">
+    <button class="btn btn-success w-100 py-3 fw-bold shadow-success rounded-3 text-uppercase spacing-1" 
+            (click)="finishSession()"
+            [disabled]="isLoading">
+      <i class="bi bi-save me-2"></i> Salvar Progresso
+    </button>
+  </div>
+
+</div>
