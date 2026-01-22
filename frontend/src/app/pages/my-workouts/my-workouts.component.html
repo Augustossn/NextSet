@@ -36,12 +36,33 @@
           <span class="badge bg-light text-dark mt-1">{{ workout.dayOfWeek }}</span>
         </div>
         
-        <div class="dropdown">
-          <button class="btn btn-link text-secondary p-0" type="button">
-            <i class="bi bi-three-dots-vertical"></i>
+        <div class="dropdown position-relative">
+          
+          <button class="btn btn-link text-secondary p-0" type="button" 
+                  (click)="toggleDropdown(workout.id, $event)">
+            <i class="bi bi-three-dots-vertical fs-5"></i>
           </button>
+          
+          <ul class="dropdown-menu dropdown-menu-dark shadow" 
+              [class.show]="activeDropdownId === workout.id"
+              style="position: absolute; right: 0; z-index: 1000;">
+            
+            <li>
+              <a class="dropdown-item" [routerLink]="['/edit-workout', workout.id]" style="cursor: pointer;">
+                <i class="bi bi-pencil me-2"></i> Editar
+              </a>
+            </li>
+            
+            <li><hr class="dropdown-divider border-secondary"></li>
+
+            <li>
+              <button class="dropdown-item text-danger" (click)="deleteWorkout(workout.id)">
+                <i class="bi bi-trash me-2"></i> Excluir
+              </button>
+            </li>
+          </ul>
         </div>
-      </div>
+        </div>
       
       <p class="text-secondary small mb-3">
         {{ workout.exercises?.length || 0 }} exercícios

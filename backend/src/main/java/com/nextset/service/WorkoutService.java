@@ -90,4 +90,57 @@ public class WorkoutService {
 
         return dto;
     }
+
+    public WorkoutDTO getWorkoutById(Long id) {
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
+        return convertToDto(workout); // Reaproveita seu método convertToDto existente
+    }
+
+    // Deletar Treino
+    public void deleteWorkout(Long id) {
+        workoutRepository.deleteById(id);
+    }
+
+    // Atualizar Treino
+    @Transactional
+    public WorkoutDTO updateWorkout(Long id, WorkoutDTO dto) {
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
+
+        workout.setName(dto.getName());
+        workout.setDayOfWeek(dto.getDayOfWeek());
+
+        // Atualizar a lista de exercícios é complexo. 
+        // A estratégia mais simples e segura: limpar a lista atual e adicionar a nova.
+        // O orphanRemoval=true na Entidade cuidará de apagar os antigos do banco.
+        
+        workout.getExercises().clear(); // Limpa os antigos
+
+        if (dto.getExercises() != null) {
+            List<Exercise> newExercises = dto.getExercises().stream().map(exDto -> {
+                Exercise exercise = new Exercise();
+                exercise.setName(exDto.getName());
+                exercise.setWorkout(workout); // Vínculo Pai
+
+                if (exDto.getSets() != null) {
+                    List<ExerciseSet> sets = exDto.getSets().stream().map(setDto -> {
+                        ExerciseSet set = new ExerciseSet();
+                        set.setSetNumber(setDto.getSetNumber());
+                        set.setReps(setDto.getReps());
+                        set.setWeight(setDto.getWeight());
+                        set.setExercise(exercise); // Vínculo Filho
+                        return set;
+                    }).collect(Collectors.toList());
+                    exercise.setSets(sets);
+                }
+                return exercise;
+            }).collect(Collectors.toList());
+            
+            workout.getExercises().addAll(newExercises); // Adiciona os novos
+        }
+
+        Workout saved = workoutRepository.save(workout);
+        return convertToDto(saved);
+    }
 }

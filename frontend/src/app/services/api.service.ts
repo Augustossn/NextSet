@@ -37,4 +37,18 @@ export class ApiService {
     // Garante que a URL bate com o Backend (/api/stats/prs)
     return this.http.get<PersonalRecordDTO[]>(`${this.baseUrl}/stats/prs`);
   }
+  // Buscar um treino específico
+  getWorkoutById(id: number): Observable<WorkoutDTO> {
+    return this.http.get<WorkoutDTO>(`${this.baseUrl}/workouts/${id}`);
+  }
+
+  // Atualizar
+  updateWorkout(id: number, workout: any): Observable<WorkoutDTO> {
+    return this.http.put<WorkoutDTO>(`${this.baseUrl}/workouts/${id}`, workout);
+  }
+
+  // Deletar
+  deleteWorkout(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/workouts/${id}`);
+  }
 }

@@ -24,4 +24,20 @@ public class WorkoutController {
     public ResponseEntity<List<WorkoutDTO>> getAllWorkouts() {
         return ResponseEntity.ok(workoutService.getAllWorkouts());
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<WorkoutDTO> getWorkout(@PathVariable Long id) {
+        return ResponseEntity.ok(workoutService.getWorkoutById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<WorkoutDTO> updateWorkout(@PathVariable Long id, @RequestBody WorkoutDTO dto) {
+        return ResponseEntity.ok(workoutService.updateWorkout(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWorkout(@PathVariable Long id) {
+        workoutService.deleteWorkout(id);
+        return ResponseEntity.noContent().build();
+    }
 }
