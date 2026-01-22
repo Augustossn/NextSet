@@ -1,0 +1,17 @@
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\config\CorsConfig.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\model\PersonalRecord.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\dto\PersonalRecordDTO.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\model\Workout.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\service\WorkoutService.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\repository\WorkoutRepository.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\repository\PersonalRecordRepository.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\dto\DashboardStatsDTO.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\dto\WorkoutDTO.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\model\Exercise.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\controller\StatsController.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\controller\WorkoutController.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\service\StatsService.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\model\ExerciseSet.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\NextSetApplication.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\dto\ExerciseDTO.java
+C:\Users\augus\nextset\backend\src\main\java\com\nextset\dto\ExerciseSetDTO.java
