@@ -74,21 +74,30 @@ export class WorkoutSessionComponent implements OnInit {
   finishSession() {
     if (!this.workout || !this.workout.id) return;
 
-    // Confirmação para o usuário
-    if (confirm('Finalizar treino? Se você bateu algum recorde, ele será salvo automaticamente!')) {
+    if (confirm('Finalizar treino? Apenas séries marcadas como FEITO contarão para o PR!')) {
       
-      // Ativa o loading para bloquear o botão e mostrar que está salvando
-      this.isLoading = true; 
+      this.isLoading = true;
+
+      if (this.workout.exercises) {
+        this.workout.exercises.forEach((exercise, i) => {
+          if (exercise.sets) {
+            exercise.sets.forEach((set, j) => {
+              const key = `${i}-${j}`;
+              set.completed = this.completedSets.has(key);
+            });
+          }
+        });
+      }
 
       this.api.updateWorkout(this.workout.id, this.workout).subscribe({
         next: () => {
-          alert('Treino concluído! Cargas atualizadas e PRs verificados.');
+          alert('Treino finalizado com sucesso!');
           this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Erro ao atualizar:', err);
           alert('Erro ao salvar o treino.');
-          this.isLoading = false; // Desbloqueia se der erro
+          this.isLoading = false;
         }
       });
     }

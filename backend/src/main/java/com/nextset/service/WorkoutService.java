@@ -134,6 +134,11 @@ public class WorkoutService {
         int maxReps = 0;
 
         for (ExerciseSetDTO set : exerciseDto.getSets()) {
+            
+            if (!set.isCompleted()) {
+                continue; 
+            }
+
             double currentWeight = set.getWeight() != null ? set.getWeight() : 0.0;
             int currentReps = set.getReps() != null ? set.getReps() : 0;
 

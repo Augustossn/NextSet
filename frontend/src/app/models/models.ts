@@ -3,6 +3,7 @@ export interface ExerciseSet {
   setNumber: number;
   reps: number;
   weight: number;
+  completed?: boolean;
 }
 
 export interface Exercise {

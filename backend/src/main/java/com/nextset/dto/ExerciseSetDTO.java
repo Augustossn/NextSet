@@ -5,6 +5,7 @@ public class ExerciseSetDTO {
     private Integer setNumber;
     private Integer reps;
     private Double weight;
+    private boolean completed;
 
     // Getters e Setters
     public Long getId() { return id; }
@@ -18,4 +19,7 @@ public class ExerciseSetDTO {
     
     public Double getWeight() { return weight; }
     public void setWeight(Double weight) { this.weight = weight; }
+
+    public boolean isCompleted() { return completed; }
+    public void setCompleted(boolean completed) { this.completed = completed; }
 }
