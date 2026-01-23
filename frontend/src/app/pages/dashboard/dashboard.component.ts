@@ -1,6 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core'; 
 import { ApiService } from '../../services/api.service';
 import { DashboardStatsDTO } from '../../models/models';
+
+declare var lucide: any;
 
 @Component({
   selector: 'app-dashboard',
@@ -8,7 +10,7 @@ import { DashboardStatsDTO } from '../../models/models';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit { 
 
   currentDate: Date = new Date();
   
@@ -21,25 +23,35 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private api: ApiService,
-    private cd: ChangeDetectorRef // Ferramenta para atualizar a tela à força
+    private cd: ChangeDetectorRef 
   ) { }
 
   ngOnInit(): void {
     this.loadStats();
   }
 
+  ngAfterViewInit(): void {
+    this.refreshIcons();
+  }
+
   loadStats() {
     this.api.getDashboardStats().subscribe({
       next: (data) => {
-        // Truque para o Angular perceber que o objeto mudou
         this.stats = { ...data };
         
-        // Força a atualização do HTML agora
         this.cd.detectChanges();
+
+        this.refreshIcons();
       },
       error: (err) => {
         console.error('Erro no dashboard', err);
       }
     });
+  }
+
+  refreshIcons() {
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
   }
 }
