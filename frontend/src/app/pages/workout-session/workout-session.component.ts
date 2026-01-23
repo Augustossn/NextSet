@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <--- Importe ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Workout } from '../../models/models';
-import { finalize } from 'rxjs/operators'; // <--- Importe finalize
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-workout-session',
@@ -22,7 +22,7 @@ export class WorkoutSessionComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private api: ApiService,
-    private cdr: ChangeDetectorRef // <--- Injete o Detector
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -43,8 +43,7 @@ export class WorkoutSessionComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.isLoading = false;
-          // 🔥 MÁGICA: Força o Angular a perceber que o carregamento acabou
-          this.cdr.detectChanges(); 
+          this.cdr.detectChanges(); // Garante atualização da tela
         })
       )
       .subscribe({
@@ -54,7 +53,6 @@ export class WorkoutSessionComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro crítico no carregamento:', err);
-          // O finalize vai tirar o spinner, mas o alert avisa o usuário
           alert('Erro ao carregar os dados do treino. Verifique o console.');
         }
       });
@@ -76,15 +74,21 @@ export class WorkoutSessionComponent implements OnInit {
   finishSession() {
     if (!this.workout || !this.workout.id) return;
 
-    if (confirm('Finalizar treino e salvar estas cargas como nova meta?')) {
+    // Confirmação para o usuário
+    if (confirm('Finalizar treino? Se você bateu algum recorde, ele será salvo automaticamente!')) {
+      
+      // Ativa o loading para bloquear o botão e mostrar que está salvando
+      this.isLoading = true; 
+
       this.api.updateWorkout(this.workout.id, this.workout).subscribe({
         next: () => {
-          alert('Treino concluído e cargas atualizadas!');
+          alert('Treino concluído! Cargas atualizadas e PRs verificados.');
           this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Erro ao atualizar:', err);
-          this.router.navigate(['/']);
+          alert('Erro ao salvar o treino.');
+          this.isLoading = false; // Desbloqueia se der erro
         }
       });
     }
