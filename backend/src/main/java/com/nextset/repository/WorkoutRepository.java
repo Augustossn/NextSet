@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface WorkoutRepository extends JpaRepository<Workout, Long> {
-    // Para filtrar na aba "Por Dia" (mostrado na imagem "Meus Treinos")
-    List<Workout> findByDayOfWeek(String dayOfWeek);
+    // Busca apenas os treinos DAQUELE usuário
+    List<Workout> findAllByUserId(Long userId);
 }

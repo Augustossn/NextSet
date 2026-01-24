@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importe HttpHeaders
 import { Observable } from 'rxjs';
 import { 
   Workout, 
@@ -17,38 +17,79 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  // --- Workouts ---
+  // ==========================================================
+  // AUTENTICAÇÃO (Login / Registro / Token)
+  // ==========================================================
+
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/login`, credentials);
+  }
+
+  register(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/register`, data);
+  }
+
+  saveToken(token: string) {
+    localStorage.setItem('auth_token', token);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
+
+  logout() {
+    localStorage.removeItem('auth_token');
+    window.location.reload();
+  }
+
+  // --- HELPER: Cria o cabeçalho com o Token ---
+  // Toda requisição privada precisa chamar isso agora!
+  private getHeaders() {
+    const token = this.getToken();
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      })
+    };
+  }
+
+  // ==========================================================
+  // TREINOS (Agora com getHeaders())
+  // ==========================================================
+
   getWorkouts(): Observable<Workout[]> {
-    return this.http.get<Workout[]>(`${this.baseUrl}/workouts`);
+    return this.http.get<Workout[]>(`${this.baseUrl}/workouts`, this.getHeaders());
   }
 
   createWorkout(workout: any): Observable<WorkoutDTO> {
-    return this.http.post<WorkoutDTO>(`${this.baseUrl}/workouts`, workout);
+    return this.http.post<WorkoutDTO>(`${this.baseUrl}/workouts`, workout, this.getHeaders());
   }
 
-  // --- Stats / Dashboard ---
-  getDashboardStats(): Observable<DashboardStatsDTO> {
-    // Garante que a URL bate com o Backend (/api/stats/dashboard)
-    return this.http.get<DashboardStatsDTO>(`${this.baseUrl}/stats/dashboard`);
-  }
-
-  // --- PRs ---
-  getPRs(): Observable<PersonalRecordDTO[]> {
-    // Garante que a URL bate com o Backend (/api/stats/prs)
-    return this.http.get<PersonalRecordDTO[]>(`${this.baseUrl}/stats/prs`);
-  }
-  // Buscar um treino específico
   getWorkoutById(id: number): Observable<WorkoutDTO> {
-    return this.http.get<WorkoutDTO>(`${this.baseUrl}/workouts/${id}`);
+    return this.http.get<WorkoutDTO>(`${this.baseUrl}/workouts/${id}`, this.getHeaders());
   }
 
-  // Atualizar
   updateWorkout(id: number, workout: any): Observable<WorkoutDTO> {
-    return this.http.put<WorkoutDTO>(`${this.baseUrl}/workouts/${id}`, workout);
+    return this.http.put<WorkoutDTO>(`${this.baseUrl}/workouts/${id}`, workout, this.getHeaders());
   }
 
-  // Deletar
   deleteWorkout(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/workouts/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/workouts/${id}`, this.getHeaders());
+  }
+
+  // ==========================================================
+  // ESTATÍSTICAS E PRs (Agora com getHeaders())
+  // ==========================================================
+
+  getDashboardStats(): Observable<DashboardStatsDTO> {
+    return this.http.get<DashboardStatsDTO>(`${this.baseUrl}/stats/dashboard`, this.getHeaders());
+  }
+
+  getPRs(): Observable<PersonalRecordDTO[]> {
+    return this.http.get<PersonalRecordDTO[]>(`${this.baseUrl}/stats/prs`, this.getHeaders());
   }
 }

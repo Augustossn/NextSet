@@ -17,6 +17,7 @@ import { MyWorkoutsComponent } from './pages/my-workouts/my-workouts.component';
 import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 import { PrsComponent } from './pages/prs/prs.component';
 import { WorkoutSessionComponent } from './pages/workout-session/workout-session.component';
+import { LoginComponent } from './pages/login/login.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,9 @@ import { WorkoutSessionComponent } from './pages/workout-session/workout-session
     MyWorkoutsComponent,
     NewWorkoutComponent,
     PrsComponent,
-    WorkoutSessionComponent
+    WorkoutSessionComponent,
+    AppComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

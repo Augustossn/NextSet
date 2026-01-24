@@ -1,0 +1,48 @@
+<div class="login-container d-flex align-items-center justify-content-center">
+  
+  <div class="card-login fade-in">
+    <div class="text-center mb-5">
+      <h1 class="fw-bold text-white display-4 tracking-tighter">NEXT<span class="text-success">SET</span></h1>
+      <p class="text-secondary text-uppercase spacing-2 small">Evolua suas cargas</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+      
+      <div *ngIf="!isLoginMode" class="mb-3 fade-in">
+        <label class="text-secondary small fw-bold mb-1">NOME</label>
+        <input type="text" [(ngModel)]="name" name="name" 
+               class="form-control bg-dark text-white border-secondary py-2" 
+               placeholder="Seu nome" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="text-secondary small fw-bold mb-1">EMAIL</label>
+        <input type="email" [(ngModel)]="email" name="email" 
+               class="form-control bg-dark text-white border-secondary py-2" 
+               placeholder="exemplo@email.com" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="text-secondary small fw-bold mb-1">SENHA</label>
+        <input type="password" [(ngModel)]="password" name="password" 
+               class="form-control bg-dark text-white border-secondary py-2" 
+               placeholder="******" required>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 py-3 fw-bold text-uppercase spacing-1 mb-3" [disabled]="isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        {{ isLoginMode ? 'Entrar' : 'Criar Conta' }}
+      </button>
+
+      <div class="text-center">
+        <p class="text-secondary small m-0">
+          {{ isLoginMode ? 'Não tem conta?' : 'Já tem conta?' }}
+          <a href="javascript:void(0)" (click)="toggleMode()" class="text-success fw-bold text-decoration-none ms-1">
+            {{ isLoginMode ? 'Cadastre-se' : 'Faça Login' }}
+          </a>
+        </p>
+      </div>
+
+    </form>
+  </div>
+</div>

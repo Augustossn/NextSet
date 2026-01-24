@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "workouts")
 public class Workout {
@@ -23,6 +25,11 @@ public class Workout {
 
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // Cria a coluna user_id no banco
+    @JsonIgnore // Evita loop infinito ao converter pra JSON
+    private User user;
+
     // Getters e Setters Manuais
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -38,4 +45,7 @@ public class Workout {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 }

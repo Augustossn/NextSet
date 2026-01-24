@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Seus componentes
+import { LoginComponent } from './pages/login/login.component'; // <--- Importe o Login
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MyWorkoutsComponent } from './pages/my-workouts/my-workouts.component';
 import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
@@ -9,6 +10,7 @@ import { WorkoutSessionComponent } from './pages/workout-session/workout-session
 import { PrsComponent } from './pages/prs/prs.component';
 
 const routes: Routes = [
+  { path: 'login', component: LoginComponent }, // <--- Nova Rota
   { path: '', component: DashboardComponent },
   { path: 'workouts', component: MyWorkoutsComponent },
   { path: 'new-workout', component: NewWorkoutComponent },

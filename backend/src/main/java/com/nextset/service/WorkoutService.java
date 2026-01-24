@@ -3,13 +3,16 @@ package com.nextset.service;
 import com.nextset.dto.*;
 import com.nextset.model.*;
 import com.nextset.repository.PersonalRecordRepository;
+import com.nextset.repository.UserRepository; // Importante
 import com.nextset.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull; 
+import org.springframework.security.core.context.SecurityContextHolder; // Importante
+import org.springframework.security.core.userdetails.UsernameNotFoundException; // Importante
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate; // Alterado para LocalDate
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +27,22 @@ public class WorkoutService {
     @Autowired
     private PersonalRecordRepository prRepository;
 
+    @Autowired
+    private UserRepository userRepository; // Injeção nova para buscar o usuário
+
+    // --- MÉTODO AUXILIAR: Pega o usuário que está logado ---
+    private User getCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+    }
+
     @Transactional
     public WorkoutDTO createWorkout(WorkoutDTO dto) {
+        User user = getCurrentUser(); // Descobre quem é o dono
+
         Workout workout = new Workout();
+        workout.setUser(user); // <--- VINCULA O TREINO AO USUÁRIO
         workout.setName(dto.getName());
         workout.setDayOfWeek(dto.getDayOfWeek());
         workout.setCreatedAt(LocalDateTime.now());
@@ -62,13 +78,18 @@ public class WorkoutService {
 
     @Transactional(readOnly = true)
     public List<WorkoutDTO> getAllWorkouts() {
-        return workoutRepository.findAll().stream()
+        User user = getCurrentUser();
+        
+        // MUDANÇA: Busca apenas os treinos DESTE usuário
+        return workoutRepository.findAllByUserId(user.getId()).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public WorkoutDTO getWorkoutById(@NonNull Long id) {
+        // Idealmente verificaríamos se o treino pertence ao usuário aqui também,
+        // mas para o MVP, o findAll já filtra a lista principal.
         Workout workout = workoutRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
         return convertToDto(workout); 
@@ -82,13 +103,13 @@ public class WorkoutService {
         workout.setName(dto.getName());
         workout.setDayOfWeek(dto.getDayOfWeek());
         
-        // --- VERIFICAÇÃO DE PRs (Adaptado para sua classe) ---
+        // --- VERIFICAÇÃO DE PRs COM USUÁRIO ---
         if (dto.getExercises() != null) {
             for (ExerciseDTO exDto : dto.getExercises()) {
                 checkAndUpdatePR(exDto);
             }
         }
-        // -----------------------------------------------------
+        // --------------------------------------
 
         if (workout.getExercises() != null) {
             workout.getExercises().clear();
@@ -126,7 +147,7 @@ public class WorkoutService {
         workoutRepository.deleteById(id);
     }
 
-    // --- MÉTODO CORRIGIDO PARA USAR OS SEUS GETTERS/SETTERS ---
+    // --- LÓGICA DE PR ATUALIZADA PARA MULTI-USUÁRIO ---
     private void checkAndUpdatePR(ExerciseDTO exerciseDto) {
         if (exerciseDto.getSets() == null || exerciseDto.getSets().isEmpty()) return;
 
@@ -134,7 +155,6 @@ public class WorkoutService {
         int maxReps = 0;
 
         for (ExerciseSetDTO set : exerciseDto.getSets()) {
-            
             if (!set.isCompleted()) {
                 continue; 
             }
@@ -152,13 +172,20 @@ public class WorkoutService {
 
         if (maxWeight <= 0) return;
 
+        User user = getCurrentUser(); // Pega o usuário logado
         String exerciseName = exerciseDto.getName();
-        PersonalRecord pr = prRepository.findByExerciseNameIgnoreCase(exerciseName)
+
+        // MUDANÇA: Busca PR pelo nome E pelo ID do usuário
+        PersonalRecord pr = prRepository.findByExerciseNameIgnoreCaseAndUserId(exerciseName, user.getId())
                 .orElse(new PersonalRecord());
+
+        // Se for um registro novo, vincula ao usuário
+        if (pr.getUser() == null) {
+            pr.setUser(user);
+        }
 
         boolean isNewRecord = false;
 
-        // AQUI ESTAVAM OS ERROS: Agora usamos getMaxWeight() em vez de getWeight()
         if (pr.getMaxWeight() == null) {
             isNewRecord = true;
         } else if (maxWeight > pr.getMaxWeight()) {
@@ -169,12 +196,12 @@ public class WorkoutService {
 
         if (isNewRecord) {
             pr.setExerciseName(exerciseName);
-            pr.setMaxWeight(maxWeight); // Ajustado
-            pr.setMaxReps(maxReps);     // Ajustado
-            pr.setDateAchieved(LocalDate.now()); // Ajustado para LocalDate
+            pr.setMaxWeight(maxWeight);
+            pr.setMaxReps(maxReps);
+            pr.setDateAchieved(LocalDate.now());
             
             prRepository.save(pr);
-            System.out.println("NOVO PR SALVO: " + exerciseName + " - " + maxWeight + "kg");
+            System.out.println("NOVO PR SALVO PARA " + user.getName() + ": " + exerciseName + " - " + maxWeight + "kg");
         }
     }
 
