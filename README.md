@@ -1,4 +1,4 @@
-# NextSet 🏋️‍♂️
+# NextSet 
 
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
@@ -10,23 +10,8 @@
 
 O **NextSet** é uma aplicação Fullstack desenvolvida para ajudar praticantes de musculação a gerenciar seus treinos e, principalmente, monitorar a **Progressão de Carga**. Diferente de blocos de notas comuns, o sistema calcula automaticamente seus Recordes Pessoais (PRs) baseados no histórico, oferecendo estatísticas visuais sobre sua evolução.
 
----
 
-## 📸 Screenshots
-
-| Dashboard (Dark Mode) | Meus Treinos |
-|:---:|:---:|
-| ![Dashboard](assets/dashboard.png) | ![Treinos](assets/workouts.png) |
-
-| Login / Registro | Perfil & Configurações |
-|:---:|:---:|
-| ![Login](assets/login.png) | ![Perfil](assets/profile.png) |
-
-> *Nota: As imagens acima ficam na pasta `assets` na raiz do projeto.*
-
----
-
-## 🚀 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 ### Backend (API REST)
 - **Java 17**
@@ -43,18 +28,18 @@ O **NextSet** é uma aplicação Fullstack desenvolvida para ajudar praticantes 
 
 ---
 
-## ✨ Funcionalidades Principais
+## Funcionalidades Principais
 
-- 🔐 **Autenticação Segura:** Sistema completo de Login e Registro com tokens JWT (JSON Web Token). Proteção de rotas via *Guards* no Frontend.
-- 🏋️ **Gestão de Treinos:** CRUD completo de treinos. Adicione exercícios, séries, repetições e cargas.
-- 🏆 **Rastreamento de PRs:** O sistema identifica automaticamente quando você bate um novo recorde (maior carga ou mais repetições com a mesma carga) e salva no seu histórico.
-- 📊 **Dashboard Estatístico:** Visualização rápida do volume total de treino e últimos recordes.
-- 🎨 **Temas:** Suporte completo a **Dark Mode** (padrão) e **Light Mode**, persistido nas preferências do usuário.
-- 👤 **Gestão de Conta:** Edição de perfil e opção de "Soft Delete" (exclusão de conta) com limpeza em cascata de dados.
+-  **Autenticação Segura:** Sistema completo de Login e Registro com tokens JWT (JSON Web Token). Proteção de rotas via *Guards* no Frontend.
+-  **Gestão de Treinos:** CRUD completo de treinos. Adicione exercícios, séries, repetições e cargas.
+-  **Rastreamento de PRs:** O sistema identifica automaticamente quando você bate um novo recorde (maior carga ou mais repetições com a mesma carga) e salva no seu histórico.
+-  **Dashboard Estatístico:** Visualização rápida do volume total de treino e últimos recordes.
+-  **Temas:** Suporte completo a **Dark Mode** (padrão) e **Light Mode**, persistido nas preferências do usuário.
+-  **Gestão de Conta:** Edição de perfil e opção de "Soft Delete" (exclusão de conta) com limpeza em cascata de dados.
 
 ---
 
-## 📦 Como Rodar o Projeto
+##  Como Rodar o Projeto
 
 ### Pré-requisitos
 - Java 17+
@@ -96,5 +81,7 @@ ng serve
 4. Acesse http://localhost:4200 no seu navegador.
 
 ## Autor
-#Augusto Soares de Souza
+
+###Augusto Soares de Souza
+
 Desenvolvido como projeto de portfólio focado em arquitetura limpa e boas práticas.
