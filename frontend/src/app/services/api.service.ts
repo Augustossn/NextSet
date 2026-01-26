@@ -92,4 +92,13 @@ export class ApiService {
   getPRs(): Observable<PersonalRecordDTO[]> {
     return this.http.get<PersonalRecordDTO[]>(`${this.baseUrl}/stats/prs`, this.getHeaders());
   }
+
+  getProfile(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/user/me`, this.getHeaders());
+  }
+
+  deleteAccount(): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/user/me`, this.getHeaders());
+  }
+
 }

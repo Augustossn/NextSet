@@ -3,10 +3,10 @@
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 :root {
-  /* Paleta de Cores baseada nas imagens */
+  /* Paleta de Cores baseada nas imagens (Modo Escuro Padrão) */
   --bg-color: #050505;       /* Fundo quase preto */
   --card-bg: #121212;        /* Fundo dos cards */
-  --primary-green: #00e640;  /* Aquele verde neon vibrante */
+  --primary-green: #00e640;  /* Verde neon vibrante */
   --text-white: #ffffff;
   --text-gray: #a1a1aa;
   --danger-red: #ef4444;
@@ -20,7 +20,10 @@ body {
   color: var(--text-white);
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin-bottom: 80px; /* Espaço para a barra de navegação inferior */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Animação suave de tema */
 }
+
+/* --- ESTILOS GERAIS --- */
 
 /* Estilização Padrão dos Cards */
 .card-dark {
@@ -30,6 +33,7 @@ body {
   color: var(--text-white);
   padding: 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Títulos */
@@ -41,7 +45,7 @@ h1, h2, h3, h4 {
 /* Botão Verde Principal */
 .btn-primary-custom {
   background-color: var(--primary-green);
-  color: #000; /* Texto preto no fundo verde dá contraste alto igual na imagem */
+  color: #000;
   font-weight: 600;
   border: none;
   border-radius: 8px;
@@ -55,11 +59,11 @@ h1, h2, h3, h4 {
   color: #000;
 }
 
-/* Ícones redondos (como o haltere verde na dashboard) */
+/* Ícones redondos */
 .icon-circle {
   width: 40px;
   height: 40px;
-  background-color: rgba(0, 230, 64, 0.1); /* Verde transparente */
+  background-color: rgba(0, 230, 64, 0.1);
   color: var(--primary-green);
   border-radius: 50%;
   display: flex;
@@ -70,3 +74,81 @@ h1, h2, h3, h4 {
 
 .nav-link { color: var(--text-gray); }
 .active-link { color: var(--primary-green) !important; }
+
+/* Helpers de Animação */
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+/* Helpers de Hover (Usados no Perfil) */
+.hover-gray:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  cursor: pointer;
+}
+
+.hover-red:hover {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+  cursor: pointer;
+}
+
+/* ==========================================================
+   TEMA CLARO (LIGHT MODE)
+   Essas regras só aplicam quando o body tem a classe .light-mode
+   ========================================================== */
+
+body.light-mode {
+  background-color: #f8f9fa !important; /* Fundo cinza bem claro */
+  color: #212529 !important; /* Texto quase preto */
+}
+
+/* Inverte as cores dos textos utilitários */
+body.light-mode .text-white { color: #212529 !important; }
+body.light-mode .text-secondary { color: #6c757d !important; }
+body.light-mode .text-gray { color: #495057 !important; }
+
+/* Ajusta o Card Dark para virar "Card Light" */
+body.light-mode .card-dark {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  color: #212529;
+}
+
+/* Ajusta Inputs */
+body.light-mode .form-control {
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 1px solid #ced4da !important;
+}
+
+/* Ajusta Bordas */
+body.light-mode .border-secondary {
+  border-color: #dee2e6 !important;
+}
+
+/* Ajusta o Menu Inferior (Navbar) */
+body.light-mode .fixed-bottom {
+  background: #ffffff !important;
+  border-top: 1px solid #dee2e6 !important;
+}
+
+/* Ajusta ícones do menu inferior */
+body.light-mode .fixed-bottom i {
+  color: #6c757d; 
+}
+body.light-mode .fixed-bottom .active-link i {
+  color: #00e640 !important; /* Mantém o verde no ativo */
+}
+
+/* Ajusta hover do perfil no modo claro */
+body.light-mode .hover-gray:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}

@@ -8,6 +8,7 @@ import { MyWorkoutsComponent } from './pages/my-workouts/my-workouts.component';
 import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 import { WorkoutSessionComponent } from './pages/workout-session/workout-session.component';
 import { PrsComponent } from './pages/prs/prs.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent }, // <--- Nova Rota
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'edit-workout/:id', component: NewWorkoutComponent },
   { path: 'session/:id', component: WorkoutSessionComponent }, 
   { path: 'prs', component: PrsComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: '**', redirectTo: '' }
 ];
 
