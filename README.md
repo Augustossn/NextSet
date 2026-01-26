@@ -82,6 +82,6 @@ ng serve
 
 ## Autor
 
-###Augusto Soares de Souza
+### Augusto Soares 
 
 Desenvolvido como projeto de portfólio focado em arquitetura limpa e boas práticas.
