@@ -3,14 +3,24 @@
   <h2 class="fw-bold text-white mb-4">Meu Perfil</h2>
 
   <div class="card-dark p-4 mb-4 d-flex align-items-center gap-3">
+    
     <div class="bg-success rounded-circle d-flex align-items-center justify-content-center fw-bold text-black fs-1" 
          style="width: 80px; height: 80px;">
-      {{ user?.name?.charAt(0) || 'U' }}
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+      <span *ngIf="!isLoading">{{ user?.name?.charAt(0) || '?' }}</span>
     </div>
+
     <div>
-      <h3 class="fw-bold text-white m-0">{{ user?.name || 'Carregando...' }}</h3>
-      <p class="text-secondary m-0">{{ user?.email }}</p>
+      <h3 class="fw-bold text-white m-0">
+        <span *ngIf="isLoading">Carregando...</span>
+        <span *ngIf="!isLoading">{{ user?.name || 'Usuário sem Nome' }}</span>
+      </h3>
+      
+      <p class="text-secondary m-0">
+        <span *ngIf="!isLoading">{{ user?.email }}</span>
+      </p>
     </div>
+
   </div>
 
   <h5 class="text-secondary text-uppercase small fw-bold mb-3 spacing-1">Preferências</h5>

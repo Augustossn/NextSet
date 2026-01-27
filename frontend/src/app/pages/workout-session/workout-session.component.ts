@@ -3,10 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Workout } from '../../models/models';
 import { finalize } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr'; 
 
 @Component({
   selector: 'app-workout-session',
-  standalone: false,
+  standalone: false, 
   templateUrl: './workout-session.component.html',
   styleUrls: ['./workout-session.component.css']
 })
@@ -15,14 +16,14 @@ export class WorkoutSessionComponent implements OnInit {
   workout: Workout | null = null;
   isLoading = true;
   
-  // Controle visual de séries concluídas
   completedSets: Set<string> = new Set();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private api: ApiService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastr: ToastrService 
   ) { }
 
   ngOnInit(): void {
@@ -32,6 +33,7 @@ export class WorkoutSessionComponent implements OnInit {
     if (id && !isNaN(id)) {
       this.loadWorkout(id);
     } else {
+      this.toastr.error('Treino não encontrado.', 'Erro'); 
       this.router.navigate(['/']);
     }
   }
@@ -43,7 +45,7 @@ export class WorkoutSessionComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.isLoading = false;
-          this.cdr.detectChanges(); // Garante atualização da tela
+          this.cdr.detectChanges();
         })
       )
       .subscribe({
@@ -52,8 +54,8 @@ export class WorkoutSessionComponent implements OnInit {
           this.workout = data;
         },
         error: (err) => {
-          console.error('Erro crítico no carregamento:', err);
-          alert('Erro ao carregar os dados do treino. Verifique o console.');
+          console.error('Erro crítico:', err);
+          this.toastr.error('Não foi possível carregar o treino.', 'Erro de Conexão');
         }
       });
   }
@@ -74,7 +76,7 @@ export class WorkoutSessionComponent implements OnInit {
   finishSession() {
     if (!this.workout || !this.workout.id) return;
 
-    if (confirm('Finalizar treino? Apenas séries marcadas como FEITO contarão para o PR!')) {
+    if (confirm('Finalizar treino? As séries marcadas atualizarão seus Recordes (PRs)!')) {
       
       this.isLoading = true;
 
@@ -91,12 +93,12 @@ export class WorkoutSessionComponent implements OnInit {
 
       this.api.updateWorkout(this.workout.id, this.workout).subscribe({
         next: () => {
-          alert('Treino finalizado com sucesso!');
+          this.toastr.success('Treino finalizado! PRs atualizados.', 'Bom trabalho! 💪');
           this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Erro ao atualizar:', err);
-          alert('Erro ao salvar o treino.');
+          this.toastr.error('Falha ao salvar o progresso. Tente novamente.', 'Erro');
           this.isLoading = false;
         }
       });

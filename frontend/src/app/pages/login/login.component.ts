@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -10,15 +11,14 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
 
-  isLoginMode = true; // Alterna entre Login e Registro
+  isLoginMode = true;
   isLoading = false;
 
   name = '';
   email = '';
   password = '';
 
-  constructor(private api: ApiService, private router: Router) {
-    // Se já estiver logado, joga pro Dashboard
+  constructor(private api: ApiService, private router: Router, private toastr: ToastrService) {
     if (this.api.isLoggedIn()) {
       this.router.navigate(['/']);
     }
@@ -34,28 +34,31 @@ export class LoginComponent {
     this.isLoading = true;
 
     if (this.isLoginMode) {
-      // --- LOGIN ---
       this.api.login({ email: this.email, password: this.password }).subscribe({
         next: (res) => {
-          this.api.saveToken(res.token); // Salva o JWT
-          this.router.navigate(['/']); // Vai pro Dashboard
+          this.api.saveToken(res.token); 
+          this.toastr.success('Bem-vindo de volta!', 'Sucesso');
+          this.router.navigate(['/']); 
         },
         error: (err) => {
           this.isLoading = false;
-          alert('Login falhou! Verifique email e senha.');
+          this.toastr.error('Email ou senha incorretos.', 'Erro de Login');
         }
       });
     } else {
-      // --- REGISTRO ---
       this.api.register({ name: this.name, email: this.email, password: this.password }).subscribe({
         next: (res) => {
           this.api.saveToken(res.token);
-          alert('Conta criada com sucesso!');
+          this.toastr.success('Conta criada com sucesso!', 'Bem-vindo');
           this.router.navigate(['/']);
         },
         error: (err) => {
           this.isLoading = false;
-          alert('Erro ao criar conta. Tente outro email.');
+          if (err.status === 400) {
+            this.toastr.warning('Este email já está em uso.', 'Atenção');
+          } else {
+            this.toastr.error('Não foi possível criar a conta.', 'Erro');
+          }
         }
       });
     }

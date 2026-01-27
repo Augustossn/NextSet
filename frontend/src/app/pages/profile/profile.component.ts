@@ -1,18 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+  standalone: false,
 })
 export class ProfileComponent implements OnInit {
 
   user: any = null;
-  isDarkMode = true; // Padrão é escuro
+  isLoading = true; // <--- Variável de controle
+  isDarkMode = true;
 
-  constructor(private api: ApiService, private router: Router) { }
+  constructor(private api: ApiService, private router: Router , private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.loadProfile();
@@ -20,9 +23,18 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfile() {
+    this.isLoading = true; 
+
     this.api.getProfile().subscribe({
-      next: (data) => this.user = data,
-      error: () => alert('Erro ao carregar perfil.')
+      next: (data) => {
+        console.log('Dados recebidos do backend:', data); 
+        this.user = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false; 
+      }
     });
   }
 
@@ -62,13 +74,12 @@ export class ProfileComponent implements OnInit {
       if (confirmDouble === 'DELETAR') {
         this.api.deleteAccount().subscribe({
           next: () => {
-            alert('Conta excluída. Sentiremos sua falta!');
-            this.api.logout(); // Limpa token
+            this.toastr.info('Sua conta foi excluída.', 'Até logo'); 
+            this.api.logout();
             this.router.navigate(['/login']);
           },
           error: (err) => {
-            console.error(err);
-            alert('Erro ao excluir conta.');
+            this.toastr.error('Erro ao excluir conta. Tente novamente.', 'Erro');
           }
         });
       }

@@ -4,6 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 // --- Imports de Locale (Datas em Português) ---
 import { registerLocaleData } from '@angular/common';
@@ -18,6 +20,7 @@ import { NewWorkoutComponent } from './pages/new-workout/new-workout.component';
 import { PrsComponent } from './pages/prs/prs.component';
 import { WorkoutSessionComponent } from './pages/workout-session/workout-session.component';
 import { LoginComponent } from './pages/login/login.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -28,14 +31,22 @@ import { LoginComponent } from './pages/login/login.component';
     PrsComponent,
     WorkoutSessionComponent,
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+      progressBar: true
+    }) 
   ],
   providers: [
     // Diz para o Angular usar PT-BR como padrão em tudo
