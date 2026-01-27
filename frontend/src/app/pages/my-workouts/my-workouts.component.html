@@ -1,81 +1,80 @@
-<div class="mb-5 pb-5 fade-in">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold m-0 text-white">Meus Treinos</h2>
-    <button routerLink="/new-workout" class="btn btn-success rounded-circle shadow-success btn-floating">
-      <i class="bi bi-plus-lg"></i>
-    </button>
-  </div>
-
-  <div class="bg-dark-light p-1 rounded-pill d-flex mb-4 border border-secondary">
-    <button class="btn btn-sm flex-fill rounded-pill transition-all"
-      [class.btn-dark-active]="filterType === 'ALL'" 
-      [class.text-secondary]="filterType !== 'ALL'"
-      (click)="setFilter('ALL')">
-      Todos
-    </button>
-    <button class="btn btn-sm flex-fill rounded-pill transition-all"
-      [class.btn-dark-active]="filterType === 'DAY'" 
-      [class.text-secondary]="filterType !== 'DAY'"
-      (click)="setFilter('DAY')">
-      Por Dia
-    </button>
-  </div>
-
-  <div *ngIf="isLoading" class="text-center py-5">
-    <div class="spinner-border text-success" role="status">
-      <span class="visually-hidden">Carregando...</span>
+<div class="page-container fade-in pb-5">
+  
+  <div class="header-section d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold text-white m-0 tracking-tighter">MEUS <span class="text-success">TREINOS</span></h2>
+      <p class="text-secondary small m-0">Gerencie sua rotina</p>
     </div>
+    <button routerLink="/new-workout" class="btn btn-icon-glow">
+      <i class="bi bi-plus-lg fs-4"></i>
+    </button>
+  </div>
+
+  <div class="filter-container mb-4">
+    <div class="segmented-control">
+      <button class="segment-btn" 
+        [class.active]="filterType === 'ALL'" 
+        (click)="setFilter('ALL')">Todos</button>
+      <button class="segment-btn" 
+        [class.active]="filterType === 'DAY'" 
+        (click)="setFilter('DAY')">Por Dia</button>
+      <div class="segment-glider" [style.transform]="filterType === 'ALL' ? 'translateX(0)' : 'translateX(100%)'"></div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-success" role="status"></div>
   </div>
 
   <div *ngIf="!isLoading" class="d-flex flex-column gap-3">
     
-    <div *ngFor="let workout of filteredWorkouts" class="card-dark border-start border-4 border-success p-3">
-      <div class="d-flex justify-content-between align-items-start mb-2">
-        <div>
-          <h5 class="fw-bold m-0 text-white">{{ workout.name }}</h5>
-          <span class="badge bg-light text-dark mt-1">{{ workout.dayOfWeek }}</span>
-        </div>
-        
-        <div class="dropdown position-relative">
-          
-          <button class="btn btn-link text-secondary p-0" type="button" 
-                  (click)="toggleDropdown(workout.id, $event)">
-            <i class="bi bi-three-dots-vertical fs-5"></i>
-          </button>
-          
-          <ul class="dropdown-menu dropdown-menu-dark shadow" 
-              [class.show]="activeDropdownId === workout.id"
-              style="position: absolute; right: 0; z-index: 1000;">
-            
-            <li>
-              <a class="dropdown-item" [routerLink]="['/edit-workout', workout.id]" style="cursor: pointer;">
-                <i class="bi bi-pencil me-2"></i> Editar
-              </a>
-            </li>
-            
-            <li><hr class="dropdown-divider border-secondary"></li>
-
-            <li>
-              <button class="dropdown-item text-danger" (click)="deleteWorkout(workout.id)">
-                <i class="bi bi-trash me-2"></i> Excluir
-              </button>
-            </li>
-          </ul>
-        </div>
-        </div>
+    <div *ngFor="let workout of filteredWorkouts" class="workout-card position-relative overflow-hidden">
       
-      <p class="text-secondary small mb-3">
-        {{ workout.exercises.length || 0 }} exercícios
-      </p>
+      <div class="card-accent"></div>
 
-      <button class="btn btn-success w-100 fw-bold py-2 rounded-3 shadow-sm"
-        [routerLink]="['/session', workout.id]"> <i class="bi bi-play-fill me-1"></i> Iniciar Treino
-      </button>
+      <div class="card-body p-3">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <div class="badge-day mb-1">{{ workout.dayOfWeek }}</div>
+            <h4 class="fw-bold text-white m-0 text-truncate" style="max-width: 220px;">{{ workout.name }}</h4>
+          </div>
+
+          <div class="dropdown position-relative">
+            <button class="btn btn-icon-sm text-secondary" (click)="toggleDropdown(workout.id, $event)">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            
+            <ul class="custom-dropdown fade-in" [class.show]="activeDropdownId === workout.id">
+              <li (click)="activeDropdownId = null" [routerLink]="['/edit-workout', workout.id]">
+                <i class="bi bi-pencil-square me-2 text-warning"></i> Editar
+              </li>
+              <li (click)="deleteWorkout(workout.id)" class="text-danger">
+                <i class="bi bi-trash me-2"></i> Excluir
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="stat-badge">
+            <i class="bi bi-list-ol text-success"></i>
+            <span>{{ workout.exercises.length || 0 }} Exercícios</span>
+          </div>
+          </div>
+
+        <button class="btn btn-start w-100" [routerLink]="['/session', workout.id]">
+          <span>INICIAR SESSÃO</span>
+          <i class="bi bi-arrow-right-short fs-4"></i>
+        </button>
+      </div>
     </div>
 
-    <div *ngIf="filteredWorkouts.length === 0" class="text-center py-5 opacity-50">
-      <i class="bi bi-clipboard-x fs-1 mb-2 d-block"></i>
-      <p>Nenhum treino encontrado para este filtro.</p>
+    <div *ngIf="filteredWorkouts.length === 0" class="empty-state text-center py-5">
+      <div class="icon-circle mb-3 mx-auto">
+        <i class="bi bi-dumbbell fs-1"></i>
+      </div>
+      <h5 class="text-white fw-bold">Nenhum treino encontrado</h5>
+      <p class="text-secondary small">Crie um novo treino para começar sua jornada.</p>
     </div>
 
   </div>
