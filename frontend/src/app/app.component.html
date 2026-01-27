@@ -2,31 +2,30 @@
   <router-outlet></router-outlet>
 </div>
 
-<nav *ngIf="router.url !== '/login'" class="navbar fixed-bottom navbar-dark bg-black border-top border-secondary fade-in">
+<nav class="navbar fixed-bottom navbar-dark" style="background-color: #050505; border-top: 1px solid #27272a;">
   <div class="container-fluid d-flex justify-content-around">
-
-    <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="nav-link text-center">
-      <i class="bi bi-grid-fill fs-4"></i>
+    
+    <a class="nav-link text-center" routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+      <i class="bi bi-house-door-fill d-block" style="font-size: 1.5rem;"></i>
+      <span style="font-size: 0.75rem;">Início</span>
     </a>
 
-    <a routerLink="/workouts" routerLinkActive="active-link" class="nav-link text-center">
-      <i class="bi bi-collection-fill fs-4"></i>
+    <a class="nav-link text-center" routerLink="/workouts" routerLinkActive="active-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="d-block mx-auto" style="margin-bottom: 4px;">
+        <path d="M6 5v14H4V5h2m14 0v14h-2V5h2M5 3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5m14 0c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-2M8 11h8v2H8v-2z"/>
+      </svg>
+      <span style="font-size: 0.75rem;">Treinos</span>
     </a>
 
-    <div class="position-relative" style="top: -25px;">
-      <a routerLink="/new-workout" class="btn btn-primary-custom rounded-circle d-flex align-items-center justify-content-center shadow-lg" 
-         style="width: 56px; height: 56px;">
-        <i class="bi bi-plus-lg fs-3 text-black"></i>
-      </a>
-    </div>
-
-    <a routerLink="/prs" routerLinkActive="active-link" class="nav-link text-center">
-      <i class="bi bi-trophy-fill fs-4"></i>
+    <a class="nav-link text-center" routerLink="/prs" routerLinkActive="active-link">
+      <i class="bi bi-trophy-fill d-block" style="font-size: 1.5rem;"></i>
+      <span style="font-size: 0.75rem;">PRs</span>
     </a>
 
-    <a routerLink="/profile" routerLinkActive="active-link" class="nav-link text-center">
-      <i class="bi bi-person-fill fs-4"></i>
+    <a class="nav-link text-center" routerLink="/profile" routerLinkActive="active-link">
+      <i class="bi bi-person-circle d-block" style="font-size: 1.5rem;"></i>
+      <span style="font-size: 0.75rem;">Perfil</span>
     </a>
-
   </div>
 </nav>
+
