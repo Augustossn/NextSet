@@ -8,7 +8,8 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.2</version>
-        <relativePath/> </parent>
+        <relativePath/> 
+    </parent>
     
     <groupId>com.nextset</groupId>
     <artifactId>nextset</artifactId>
@@ -64,6 +65,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
@@ -96,7 +103,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>com.nextset.NextSetApplication</mainClass>
-                    
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
