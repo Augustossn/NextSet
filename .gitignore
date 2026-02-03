@@ -73,3 +73,8 @@ typings/
 # Ambientes locais (Segurança)
 src/environments/environment.local.ts
 .env.local
+
+*.db
+*.mv.db
+*.trace.db
+backend/data/

@@ -2,7 +2,10 @@
   <router-outlet></router-outlet>
 </div>
 
-<nav class="navbar fixed-bottom navbar-dark" style="background-color: #050505; border-top: 1px solid #27272a;">
+<nav *ngIf="router.url !== '/login'" 
+     class="navbar fixed-bottom navbar-dark" 
+     style="background-color: #050505; border-top: 1px solid #27272a;">
+     
   <div class="container-fluid d-flex justify-content-around">
     
     <a class="nav-link text-center" routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
@@ -28,4 +31,3 @@
     </a>
   </div>
 </nav>
-
