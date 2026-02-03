@@ -27,7 +27,7 @@ public class SecurityConfiguration {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll() // Rotas públicas
+                .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated() // Resto bloqueado
             )
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

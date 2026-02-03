@@ -1,5 +1,5 @@
 <div class="page-container fade-in pb-5">
-  
+
   <div class="header-section d-flex justify-content-between align-items-center mb-4">
     <div>
       <h2 class="fw-bold text-white m-0 tracking-tighter">MEUS <span class="text-success">TREINOS</span></h2>
@@ -12,11 +12,11 @@
 
   <div class="filter-container mb-4">
     <div class="segmented-control">
-      <button class="segment-btn" 
-        [class.active]="filterType === 'ALL'" 
+      <button class="segment-btn"
+        [class.active]="filterType === 'ALL'"
         (click)="setFilter('ALL')">Todos</button>
-      <button class="segment-btn" 
-        [class.active]="filterType === 'DAY'" 
+      <button class="segment-btn"
+        [class.active]="filterType === 'DAY'"
         (click)="setFilter('DAY')">Por Dia</button>
       <div class="segment-glider" [style.transform]="filterType === 'ALL' ? 'translateX(0)' : 'translateX(100%)'"></div>
     </div>
@@ -27,9 +27,9 @@
   </div>
 
   <div *ngIf="!isLoading" class="d-flex flex-column gap-3">
-    
+
     <div *ngFor="let workout of filteredWorkouts" class="workout-card position-relative overflow-hidden">
-      
+
       <div class="card-accent"></div>
 
       <div class="card-body p-3">
@@ -43,14 +43,18 @@
             <button class="btn btn-icon-sm text-secondary" (click)="toggleDropdown(workout.id, $event)">
               <i class="bi bi-three-dots-vertical"></i>
             </button>
-            
+
             <ul class="custom-dropdown fade-in" [class.show]="activeDropdownId === workout.id">
               <li (click)="activeDropdownId = null" [routerLink]="['/edit-workout', workout.id]">
                 <i class="bi bi-pencil-square me-2 text-warning"></i> Editar
               </li>
+              <li (click)="shareWorkout(workout.id)">
+                <i class="bi bi-share me-2 text-primary"></i> Compartilhar
+              </li>
               <li (click)="deleteWorkout(workout.id)" class="text-danger">
                 <i class="bi bi-trash me-2"></i> Excluir
               </li>
+
             </ul>
           </div>
         </div>

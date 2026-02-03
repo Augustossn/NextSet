@@ -1,0 +1,70 @@
+<div class="page-container fade-in pb-5">
+
+  <div class="header-section text-center mb-4">
+    <h2 class="fw-bold text-white m-0 tracking-tighter">
+      IMPORTAR <span class="text-success">TREINO</span>
+    </h2>
+    <p class="text-secondary small m-0">Adicione esta rotina ao seu perfil</p>
+  </div>
+
+  @if (isLoading() && !workoutPreview()) {
+    <div class="d-flex justify-content-center py-5">
+      <div class="spinner-border text-success" role="status"></div>
+    </div>
+  }
+
+  @if (workoutPreview()) {
+    <div class="workout-card position-relative overflow-hidden mb-4">
+
+      <div class="card-accent"></div>
+
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <div class="badge-day mb-1">{{ workoutPreview()?.dayOfWeek ?? 'COMPARTILHADO' }}</div>
+            <h3 class="fw-bold text-white m-0">{{ workoutPreview()?.name }}</h3>
+          </div>
+          <div class="icon-circle-sm">
+            <i class="bi bi-cloud-download text-success fs-4"></i>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="stat-badge">
+            <i class="bi bi-list-ol text-success"></i>
+            <span>{{ workoutPreview()?.exercises?.length || 0 }} Exercícios</span>
+          </div>
+        </div>
+
+        <div class="d-grid gap-3">
+          <button
+            (click)="confirmImport()"
+            class="btn btn-start w-100 py-3"
+            [disabled]="isLoading()">
+            @if (isLoading()) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              <span>IMPORTANDO...</span>
+            } @else {
+              <span>CONFIRMAR IMPORTAÇÃO</span>
+              <i class="bi bi-check-lg fs-4"></i>
+            }
+          </button>
+
+          <button (click)="router.navigate(['/'])" class="btn btn-icon-glow border-0 w-100 py-2" style="height: auto;">
+            <span class="text-secondary small fw-bold">CANCELAR</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else if (!isLoading() && !workoutPreview()) {
+    <div class="empty-state text-center py-5">
+      <div class="icon-circle mb-3 mx-auto">
+        <i class="bi bi-exclamation-triangle fs-1 text-warning"></i>
+      </div>
+      <h5 class="text-white fw-bold">Treino não encontrado</h5>
+      <p class="text-secondary small">O link pode ter expirado ou o ID é inválido.</p>
+      <button (click)="router.navigate(['/'])" class="btn btn-start mt-3">VOLTAR</button>
+    </div>
+  }
+
+</div>
