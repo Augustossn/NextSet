@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // Importe HttpHeaders
-import { Observable } from 'rxjs';
-import { 
-  Workout, 
-  WorkoutDTO, 
-  DashboardStatsDTO, 
-  PersonalRecordDTO 
-} from '../models/models'; 
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http'; // Importe HttpHeaders
+import {Observable} from 'rxjs';
+import {
+  Workout,
+  WorkoutDTO,
+  DashboardStatsDTO,
+  PersonalRecordDTO
+} from '../models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,8 @@ export class ApiService {
 
   private baseUrl = 'http://localhost:8080/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   // ==========================================================
   // AUTENTICAÇÃO (Login / Registro / Token)
@@ -79,6 +80,11 @@ export class ApiService {
 
   deleteWorkout(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/workouts/${id}`, this.getHeaders());
+  }
+
+  cloneWorkout(id: number): Observable<void> {
+    console.log(this.getHeaders())
+    return this.http.post<void>(`${this.baseUrl}/workouts/clone/${id}`, {}, this.getHeaders());
   }
 
   // ==========================================================

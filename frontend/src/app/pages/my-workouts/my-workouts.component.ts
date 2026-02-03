@@ -71,7 +71,7 @@ export class MyWorkoutsComponent implements OnInit {
   // Abre ou fecha o menu específico daquele ID
   toggleDropdown(id: number | undefined, event: Event) {
     event.stopPropagation(); // Impede que o clique feche o menu imediatamente
-    
+
     if (this.activeDropdownId === id) {
       this.activeDropdownId = null; // Se já tá aberto, fecha
     } else {
@@ -91,16 +91,26 @@ export class MyWorkoutsComponent implements OnInit {
     if (!id) return;
 
     // Fecha o menu antes de perguntar
-    this.activeDropdownId = null; 
+    this.activeDropdownId = null;
 
     if (confirm('Tem certeza que deseja excluir este treino?')) {
       this.api.deleteWorkout(id).subscribe({
         next: () => {
           this.workouts = this.workouts.filter(w => w.id !== id);
-          this.applyFilter(); 
+          this.applyFilter();
         },
         error: (err) => alert('Erro ao excluir treino.')
       });
     }
+  }
+
+  shareWorkout(id: number | undefined) {
+    if (!id) return;
+
+    const shareLink = `${window.location.origin}/import-workout/${id}`;
+
+    navigator.clipboard.writeText(shareLink).then(() => {
+      alert('Link de compartilhamento copiado!'); // Usar um Toast bonitinho depois
+    });
   }
 }
