@@ -6,7 +6,7 @@ import com.nextset.repository.PersonalRecordRepository;
 import com.nextset.repository.UserRepository; // Importante
 import com.nextset.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull; 
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder; // Importante
 import org.springframework.security.core.userdetails.UsernameNotFoundException; // Importante
 import org.springframework.stereotype.Service;
@@ -79,7 +79,7 @@ public class WorkoutService {
     @Transactional(readOnly = true)
     public List<WorkoutDTO> getAllWorkouts() {
         User user = getCurrentUser();
-        
+
         // MUDANÇA: Busca apenas os treinos DESTE usuário
         return workoutRepository.findAllByUserId(user.getId()).stream()
                 .map(this::convertToDto)
@@ -92,7 +92,7 @@ public class WorkoutService {
         // mas para o MVP, o findAll já filtra a lista principal.
         Workout workout = workoutRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
-        return convertToDto(workout); 
+        return convertToDto(workout);
     }
 
     @Transactional
@@ -102,7 +102,7 @@ public class WorkoutService {
 
         workout.setName(dto.getName());
         workout.setDayOfWeek(dto.getDayOfWeek());
-        
+
         // --- VERIFICAÇÃO DE PRs COM USUÁRIO ---
         if (dto.getExercises() != null) {
             for (ExerciseDTO exDto : dto.getExercises()) {
@@ -147,6 +147,48 @@ public class WorkoutService {
         workoutRepository.deleteById(id);
     }
 
+    @Transactional
+    public void cloneWorkout(@NonNull Long id) {
+        Workout original = workoutRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Treino não encontrado"));
+
+        User user = getCurrentUser();
+
+        Workout clone = new Workout();
+        clone.setName(original.getName() + " (Importado)");
+        clone.setDayOfWeek(original.getDayOfWeek());
+        clone.setUser(user);
+
+        if (original.getExercises() != null) {
+            List<Exercise> newExercises = original.getExercises().stream()
+                    .map(oldEx -> {
+                        Exercise newEx = new Exercise();
+                        newEx.setName(oldEx.getName());
+                        newEx.setWorkout(clone);
+
+                        if (oldEx.getSets() != null) {
+                            List<ExerciseSet> newSets = oldEx.getSets().stream()
+                                    .map(oldSet -> {
+                                        ExerciseSet newSet = new ExerciseSet();
+                                        newSet.setReps(oldSet.getReps());
+                                        newSet.setWeight(oldSet.getWeight());
+                                        newSet.setExercise(newEx);
+                                        return newSet;
+                                    }).collect(Collectors.toList());
+
+                            newEx.setSets(newSets);
+                        }
+
+                        return newEx;
+                    })
+                    .collect(Collectors.toList());
+
+            clone.setExercises(newExercises);
+        }
+
+        workoutRepository.save(clone);
+    }
+
     // --- LÓGICA DE PR ATUALIZADA PARA MULTI-USUÁRIO ---
     private void checkAndUpdatePR(ExerciseDTO exerciseDto) {
         if (exerciseDto.getSets() == null || exerciseDto.getSets().isEmpty()) return;
@@ -156,7 +198,7 @@ public class WorkoutService {
 
         for (ExerciseSetDTO set : exerciseDto.getSets()) {
             if (!set.isCompleted()) {
-                continue; 
+                continue;
             }
 
             double currentWeight = set.getWeight() != null ? set.getWeight() : 0.0;
@@ -199,7 +241,7 @@ public class WorkoutService {
             pr.setMaxWeight(maxWeight);
             pr.setMaxReps(maxReps);
             pr.setDateAchieved(LocalDate.now());
-            
+
             prRepository.save(pr);
             System.out.println("NOVO PR SALVO PARA " + user.getName() + ": " + exerciseName + " - " + maxWeight + "kg");
         }
@@ -212,7 +254,7 @@ public class WorkoutService {
         dto.setDayOfWeek(workout.getDayOfWeek());
 
         List<ExerciseDTO> exerciseDTOs = new ArrayList<>();
-        
+
         if (workout.getExercises() != null) {
             for (Exercise exercise : workout.getExercises()) {
                 ExerciseDTO exDto = new ExerciseDTO();

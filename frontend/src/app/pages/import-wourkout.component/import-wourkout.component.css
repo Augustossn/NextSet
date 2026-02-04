@@ -1,0 +1,50 @@
+/* Reutilizando a lógica do seu tema */
+.page-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Reutilizando as classes do seu CSS principal caso elas não sejam globais */
+.tracking-tighter { letter-spacing: -1px; }
+
+.workout-card {
+  background: linear-gradient(145deg, #161616, #0f0f0f);
+  border-radius: 16px;
+  border: 1px solid #222;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+}
+
+.card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary-green, #00e640); /* Fallback para verde caso a variável falhe */
+  box-shadow: 2px 0 15px rgba(0, 230, 64, 0.4);
+}
+
+.badge-day {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: 700;
+  background: rgba(255,255,255,0.05);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.stat-badge {
+  font-size: 0.9rem;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Ajuste no botão de cancelar para parecer um link discreto mas clicável */
+.btn-icon-glow:hover {
+  color: #fff !important;
+  background: rgba(255,255,255,0.05);
+}

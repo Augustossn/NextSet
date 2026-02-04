@@ -41,4 +41,10 @@ public class WorkoutController {
         workoutService.deleteWorkout(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/clone/{id}")
+    public ResponseEntity<Void> cloneWorkout(@PathVariable @NonNull Long id) {
+        workoutService.cloneWorkout(id);
+        return ResponseEntity.noContent().build();
+    }
 }
