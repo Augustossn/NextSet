@@ -8,7 +8,16 @@ public class PersonalRecordDTO {
     private Integer maxReps;
     private LocalDate dateAchieved;
 
-    // Getters e Setters Manuais
+    public PersonalRecordDTO() {
+    }
+    
+    public PersonalRecordDTO(String exerciseName, Double maxWeight, Integer maxReps, LocalDate dateAchieved) {
+        this.exerciseName = exerciseName;
+        this.maxWeight = maxWeight;
+        this.maxReps = maxReps;
+        this.dateAchieved = dateAchieved;
+    }
+
     public String getExerciseName() { return exerciseName; }
     public void setExerciseName(String exerciseName) { this.exerciseName = exerciseName; }
 

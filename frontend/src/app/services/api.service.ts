@@ -101,4 +101,8 @@ export class ApiService {
     return this.http.delete<void>(`${this.baseUrl}/user/me`, this.getHeaders());
   }
 
+  loginGoogle(code: string) {
+    return this.http.post<any>(`${this.baseUrl}/auth/google`, { code });
+  }
+
 }

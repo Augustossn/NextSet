@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -12,46 +13,56 @@ import { ToastrService } from 'ngx-toastr';
 export class ProfileComponent implements OnInit {
 
   user: any = null;
-  isLoading = true; // <--- Variável de controle
+  isLoading = true;
   isDarkMode = true;
 
-  constructor(private api: ApiService, private router: Router , private toastr: ToastrService) { }
+  constructor(
+    private api: ApiService,
+    private router: Router,
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadProfile();
     this.checkTheme();
   }
 
-  loadProfile() {
-    this.isLoading = true; 
+  loadProfile(): void {
+    this.isLoading = true;
 
-    this.api.getProfile().subscribe({
-      next: (data) => {
-        console.log('Dados recebidos do backend:', data); 
-        this.user = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.isLoading = false; 
-      }
-    });
+    this.api.getProfile()
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          // 🔥 força o Angular a atualizar a tela
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.user = data;
+        },
+        error: (err) => {
+          console.error('Erro ao carregar perfil', err);
+        }
+      });
   }
 
   // --- TEMA (Dark/Light) ---
-  checkTheme() {
+  checkTheme(): void {
     const savedTheme = localStorage.getItem('theme');
-    this.isDarkMode = savedTheme !== 'light'; // Se não for 'light', é dark
+    this.isDarkMode = savedTheme !== 'light';
     this.applyTheme();
   }
 
-  toggleTheme() {
+  toggleTheme(): void {
     this.isDarkMode = !this.isDarkMode;
     localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
     this.applyTheme();
   }
 
-  applyTheme() {
+  applyTheme(): void {
     if (this.isDarkMode) {
       document.body.classList.remove('light-mode');
     } else {
@@ -60,25 +71,27 @@ export class ProfileComponent implements OnInit {
   }
 
   // --- AÇÕES DA CONTA ---
-  logout() {
+  logout(): void {
     this.api.logout();
     this.router.navigate(['/login']);
   }
 
-  deleteAccount() {
-    const confirmDelete = confirm('TEM CERTEZA? Isso apagará todos os seus treinos e recordes permanentemente.');
-    
+  deleteAccount(): void {
+    const confirmDelete = confirm(
+      'TEM CERTEZA? Isso apagará todos os seus treinos e recordes permanentemente.'
+    );
+
     if (confirmDelete) {
       const confirmDouble = prompt('Digite "DELETAR" para confirmar a exclusão:');
-      
+
       if (confirmDouble === 'DELETAR') {
         this.api.deleteAccount().subscribe({
           next: () => {
-            this.toastr.info('Sua conta foi excluída.', 'Até logo'); 
+            this.toastr.info('Sua conta foi excluída.', 'Até logo');
             this.api.logout();
             this.router.navigate(['/login']);
           },
-          error: (err) => {
+          error: () => {
             this.toastr.error('Erro ao excluir conta. Tente novamente.', 'Erro');
           }
         });

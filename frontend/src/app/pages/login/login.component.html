@@ -1,9 +1,21 @@
 <div class="login-container d-flex align-items-center justify-content-center">
   
   <div class="card-login fade-in">
-    <div class="text-center mb-5">
+    <div class="text-center mb-4">
       <h1 class="fw-bold text-white display-4 tracking-tighter">NEXT<span class="text-success">SET</span></h1>
       <p class="text-secondary text-uppercase spacing-2 small">Evolua suas cargas</p>
+    </div>
+
+    <button type="button" class="btn btn-light w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-3 fw-bold shadow-sm" 
+            (click)="loginWithGoogle()" [disabled]="isLoading">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" alt="Google">
+      Entrar com Google
+    </button>
+
+    <div class="d-flex align-items-center mb-4">
+      <hr class="flex-grow-1 border-secondary opacity-25">
+      <span class="px-2 text-secondary small">OU</span>
+      <hr class="flex-grow-1 border-secondary opacity-25">
     </div>
 
     <form (ngSubmit)="onSubmit()">
