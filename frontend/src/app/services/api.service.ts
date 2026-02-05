@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http'; // Importe HttpHeaders
+import {HttpClient, HttpHeaders} from '@angular/common/http'; 
 import {Observable} from 'rxjs';
 import {
   Workout,
@@ -17,10 +17,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) {
   }
-
-  // ==========================================================
-  // AUTENTICAÇÃO (Login / Registro / Token)
-  // ==========================================================
 
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/login`, credentials);
@@ -47,8 +43,6 @@ export class ApiService {
     window.location.reload();
   }
 
-  // --- HELPER: Cria o cabeçalho com o Token ---
-  // Toda requisição privada precisa chamar isso agora!
   private getHeaders() {
     const token = this.getToken();
     return {
@@ -57,10 +51,6 @@ export class ApiService {
       })
     };
   }
-
-  // ==========================================================
-  // TREINOS (Agora com getHeaders())
-  // ==========================================================
 
   getWorkouts(): Observable<Workout[]> {
     return this.http.get<Workout[]>(`${this.baseUrl}/workouts`, this.getHeaders());
@@ -87,10 +77,6 @@ export class ApiService {
     return this.http.post<void>(`${this.baseUrl}/workouts/clone/${id}`, {}, this.getHeaders());
   }
 
-  // ==========================================================
-  // ESTATÍSTICAS E PRs (Agora com getHeaders())
-  // ==========================================================
-
   getDashboardStats(): Observable<DashboardStatsDTO> {
     return this.http.get<DashboardStatsDTO>(`${this.baseUrl}/stats/dashboard`, this.getHeaders());
   }
@@ -107,12 +93,7 @@ export class ApiService {
     return this.http.delete<void>(`${this.baseUrl}/user/me`, this.getHeaders());
   }
 
-<<<<<<< HEAD
   loginGoogle(code: string) {
     return this.http.post<any>(`${this.baseUrl}/auth/google`, { code });
   }
-
 }
-=======
-}
->>>>>>> 76cf557a733ab91430be49814a31540e5ccd2d95
